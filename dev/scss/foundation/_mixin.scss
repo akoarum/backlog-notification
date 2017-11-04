@@ -1,0 +1,227 @@
+@charset 'UTF-8';
+
+// ============================================
+//  clearfix
+// ============================================
+
+@mixin clearfix() {
+  &::after {
+    display: block;
+    content: '';
+    clear: both;
+  }
+}
+
+
+// ============================================
+//  ブレイクポイント
+//
+//  $device : 下記から選択してください。
+//    - overTablet  - タブレット幅以上
+//    - underTablet - タブレット幅以下
+//    - onlyPC      - PC幅のみ
+//    - onlyTablet  - タブレット幅のみ
+//    - onlySP      - SP幅のみ
+//    - free        - $min、$maxで指定した幅
+//  $min    : メディアクエリの min-width（$device: free 以外は設定不要）
+//  $max    : メディアクエリの max-width（$device: free 以外は設定不要）
+// ============================================
+
+@mixin breakPoint($device: free, $min: 0, $max: 0) {
+  $minWidth: $min;
+  $maxWidth: $max;
+
+  @if ($device == overTablet) {
+    $minWidth: $breakPoint-sp + 1;
+  } @else if ($device == underTablet) {
+    $maxWidth: $breakPoint-tablet;
+  } @else if ($device == onlyPC) {
+    $minWidth: $breakPoint-tablet + 1;
+  } @else if ($device == onlyTablet) {
+    $minWidth: $breakPoint-sp + 1;
+    $maxWidth: $breakPoint-tablet;
+  } @else if ($device == onlySP) {
+    $maxWidth: $breakPoint-sp;
+  }
+
+  @if $minWidth != 0 and $maxWidth != 0 {
+    @media screen and (min-width: $minWidth) and (max-width: $maxWidth) {
+      @content;
+    }
+  } @else if $minWidth != 0 {
+    @media screen and (min-width: $minWidth) {
+      @content;
+    }
+  } @else if $maxWidth != 0 {
+    @media screen and (max-width: $maxWidth) {
+      @content;
+    }
+  }
+}
+
+
+// ============================================
+//  コンテンツ幅
+//
+//  $minWidth : コンテンツの最小幅（ピクセル数）default: setting
+//  $maxWidth : コンテンツの最大幅（ピクセル数）default: setting
+//  $padding  : 左右のpaddingの有無（ピクセル数）default: setting
+// ============================================
+
+@mixin contentWidth($minWidth: $minWidth-base, $maxWidth: $maxWidth-base, $padding: $padding-base) {
+  box-sizing: border-box;
+
+  // RWD
+  @if $viewMode == rwd {
+    @if $maxWidth != 0 {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: $maxWidth;
+
+      @if $padding != 0 {
+        @include breakPoint(free, 0, $maxWidth + ($padding * 2)) {
+          padding-left: $padding;
+          padding-right: $padding;
+        }
+      }
+    } @else {
+      @if $padding != 0 {
+        padding-left: $padding;
+        padding-right: $padding;
+      }
+    }
+  }
+  // Adaptive
+  @if $viewMode == adaptive {
+    @if $maxWidth != 0 {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: $maxWidth;
+      @if $padding != 0 {
+        @include breakPoint(free, 0, $maxWidth + ($padding * 2)) {
+          padding-left: $padding;
+          padding-right: $padding;
+        }
+      }
+    } @else {
+      @if $padding != 0 {
+        padding-left: $padding;
+        padding-right: $padding;
+      }
+    }
+    min-width: $minWidth;
+
+    @include breakPoint(onlySP) {
+      min-width: 0;
+    }
+  }
+  // PC
+  @if $viewMode == pc {
+    min-width: $minWidth;
+    @if $maxWidth != 0 {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: $maxWidth;
+      @include breakPoint(free, 0, $maxWidth + ($padding * 2)) {
+        padding-left: $padding;
+        padding-right: $padding;
+      }
+    } @else {
+      @if $padding != 0 {
+        padding-left: $padding;
+        padding-right: $padding;
+      }
+    }
+  }
+  // SP
+  @if $viewMode == sp {
+    @if $padding != 0 {
+      padding-left: $padding;
+      padding-right: $padding;
+    }
+  }
+}
+
+
+// ============================================
+//  カラムパターン
+//
+//  $className      : ベースのクラス名（クラス名「.」は不要）
+//  $childClassName : 子要素（カラム）のクラス名（クラス名「.」は不要）
+//  $columnNum      : 生成するカラム数（最低は2カラム）（数字）default: 4
+//  $margin         : 左マージン（ピクセル数）default: 12px
+//  $course         : なりゆきパターンの作成有無（真偽値）default: true
+// ============================================
+
+@mixin column($className, $childClassName, $columnNum: 4, $margin: 12px, $course: true) {
+  @for $i from 2 through $columnNum {
+    &.#{$className}--col#{$i} {
+      @include clearfix();
+      margin-left: percentage(-$margin / 1000px);
+
+      .#{$childClassName} {
+        float: left;
+        margin-left: percentage($margin / (1000px + $margin));
+        box-sizing: border-box;
+        width: percentage(((1000px / $i) - (($margin * ($i - 1)) / $i)) / (1000px + $margin));
+
+        &:nth-child(#{$i}n + 1) {
+          clear: left;
+        }
+      }
+    }
+  }
+  @if $course == true {
+    &.#{$className}--col {
+      @include clearfix();
+      margin-left: percentage(-$margin / 1000px);
+
+      .#{$childClassName} {
+        float: left;
+        margin-left: #{$margin};
+      }
+    }
+  }
+
+  @if $setting-mode == rwd or $setting-mode == adaptive {
+    @include breakPoint(onlySP) {
+      @for $i from 2 through $columnNum {
+        &.#{$className}--col#{$i} {
+          margin-left: 0;
+
+          .#{$childClassName} {
+            float: none;
+            margin-left: 0;
+            width: auto;
+          }
+        }
+      }
+      &.#{$className}--col {
+        margin-left: 0;
+
+        .#{$childClassName} {
+          float: none;
+          margin-left: 0;
+          width: auto;
+        }
+      }
+    }
+  }
+}
+
+
+@mixin iconArrow($number, $width, $height, $direction: right) {
+  position: absolute;
+  width: $width;
+  height: $height;
+  content: '';
+  background: url($img-path + 'icon_arrow-0' + $number + '.svg') left top no-repeat;
+  background-size: 100% auto;
+  @if ($direction == top) {
+    transform: rotate(-90deg);
+  } @else if ($direction == left) {
+    transform: rotate(-180deg);
+  } @else if ($direction == bottom) {
+    transform: rotate(-270deg);
+  }
+}

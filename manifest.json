@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "Backlog Notification",
+  "description": "バックログのお知らせ通知が来た場合に、デスクトップに通知します。",
+  "version": "1.0",
+  "browser_action": {
+    "default_icon": "app/icon.png"
+  },
+  "background": {
+    "scripts": ["app/js/background.js"]
+  },
+  "permissions": [
+    "tabs", "notifications", "storage", "alarms", "https://*.backlog.jp/*", "https://*.backlog.com/*"
+  ],
+  "icons": {
+    "128": "app/icon.png"
+  },
+  "options_page": "app/options.html"
+}

@@ -1,0 +1,48 @@
+@charset 'UTF-8';
+
+/*
+#overview
+設定
+*/
+
+/* ============================================
+ * 基本設定
+ * ========================================== */
+
+$viewMode: rwd;
+$minWidth-base: 768px;
+$maxWidth-base: 860px;
+$padding-base: 12px;
+$breakPoint-tablet: 899px;
+$breakPoint-sp: 767px;
+
+
+/* ============================================
+ * フォント設定
+ * ========================================== */
+
+$font-size: 1.6rem;
+$fontFamily-ja: 'ヒラギノ角ゴ ProN W3', Hiragino Kaku Gothic ProN, Arial, 'メイリオ', Meiryo, sans-serif;
+$fontFamily-en: 'Open Sans', 'ヒラギノ角ゴ ProN W3', Hiragino Kaku Gothic ProN, Arial, 'メイリオ', Meiryo, sans-serif;
+$lineHeight: 1.6;
+
+
+/* ============================================
+ * カラーパレット
+ * ========================================== */
+
+/*
+#colors
+
+@text #222
+@link #257ce8
+@base #f0f0f0
+@effect #d4d4d4
+@accent #bc1619
+*/
+
+$color-text: #222;
+$color-link: #257ce8;
+$color-base: #f0f0f0;
+$color-effect: #d4d4d4;
+$color-accent: #bc1619;

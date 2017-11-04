@@ -1,0 +1,221 @@
+@charset "UTF-8";
+
+@import 'foundation/setting';
+@import 'foundation/normalize';
+@import 'foundation/mixin';
+
+// ==============================================
+// Layout
+// ==============================================
+
+.l-header {
+  box-shadow: 0 1px 4px 0 rgba(44, 44, 44, .4);
+  background: #40cfa0;
+
+  &__inner {
+    @include contentWidth();
+    padding: 12px 0;
+  }
+  &__title {
+    font-size: 3rem;
+    font-weight: normal;
+    line-height: 1;
+    color: #fff;
+  }
+}
+
+.l-main {
+  @include contentWidth();
+  padding: 46px 0;
+}
+
+
+// ==============================================
+// Object
+// ==============================================
+
+.c-sec {
+  &__title {
+    margin-bottom: 14px;
+    border-bottom: 1px solid #afafaf;
+    padding: 0 0 4px 2px;
+    font-size: 2.4rem;
+    font-weight: normal;
+    line-height: 1.4;
+  }
+}
+
+
+// ==============================================
+// 完了テキスト
+// ==============================================
+
+.c-txt-completed {
+  margin: 36px 0;
+  border-radius: 4px;
+  border: 1px solid #40cfa0;
+  background: #e6f7f1;
+  padding: 14px 22px;
+  line-height: 1;
+}
+
+
+// ==============================================
+// 注釈テキスト
+// ==============================================
+
+.c-txt-notice {
+  font-size: 1.3rem;
+  color: #818181;
+}
+
+
+// ==============================================
+// フォーム
+// ==============================================
+
+.c-form-tbl {
+  margin-bottom: 44px;
+  width: 100%;
+
+  th,
+  td {
+    font-size: 1.6rem;
+    text-align: left;
+  }
+  th {
+    width: 174px;
+    font-weight: normal;
+  }
+  tr + tr {
+    th,
+    td {
+      padding-top: 19px;
+    }
+  }
+
+  .c-txt-notice {
+    margin-top: 8px;
+  }
+}
+
+
+// ==============================================
+// テキストフィールド
+// ==============================================
+
+.c-form-text {
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 5px 9px;
+  width: 100%;
+  font-size: 1.5rem;
+  outline: none;
+  transition: border .3s ease;
+
+  &:focus {
+    border-bottom: 1px solid #40cfa0;
+  }
+  &.is-error {
+    border-bottom: 1px solid #e83737;
+  }
+
+  &.-w30 {
+    width: 30%;
+  }
+  &.-w60 {
+    width: 60%;
+  }
+}
+
+
+// ==============================================
+// セレクトボックス
+// ==============================================
+
+.c-form-select {
+  position: relative;
+  display: inline-block;
+  width: 25%;
+
+  &::after {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    content: '';
+    margin-top: -5px;
+    border-width: 7px 4px;
+    border-color: #2c9a7a transparent transparent;
+    border-style: solid;
+  }
+
+  select {
+    appearance: none;
+    box-sizing: border-box;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 5px 24px 5px 9px;
+    width: 100%;
+    background: transparent;
+    font-size: 1.5rem;
+    outline: none;
+
+    &:focus {
+      border-bottom: 1px solid #40cfa0;
+    }
+  }
+}
+
+
+// ==============================================
+// フォームエラーメッセージ
+// ==============================================
+
+.c-form-error {
+  margin-top: 8px;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #e83737
+}
+
+
+// ==============================================
+// ボタンコンテナ
+// ==============================================
+
+.c-btn-container {
+  text-align: center;
+}
+
+
+// ==============================================
+// ボタン
+// ==============================================
+
+.c-btn {
+  box-shadow: 0 1px 5px 0 rgba(96, 96, 96, .5);
+  border-radius: 2px;
+  padding: 12px 22px;
+  background: #fc4ec8;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #fff;
+  transition: background .3s ease;
+
+  &:hover,
+  &:focus {
+    background: #d3a;
+  }
+
+  &[disabled] {
+    background: #d6d6d6;
+    cursor: default;
+
+    &:hover,
+    &:focus {
+      background: #d6d6d6;
+    }
+  }
+}
