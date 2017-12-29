@@ -1,3 +1,64 @@
+/**
+ * バックログAPIへのリクエスト
+ * @param {string} name - バックログスペースの名前
+ * @param {string} tld - バックログスペースのトップレベルドメイン
+ * @param {string} key - バックログのAPIキー
+ */
+class RequestBacklogApi {
+  constructor(name, tld, key) {
+    this.domain = `https://${name}.backlog.${tld}/`;
+    this.url = `${this.domain}api/v2/`;
+    this.key = key;
+  }
+
+
+  /**
+   * お知らせ件数の取得
+   * @return {Promise<json>}
+   */
+  requestCounts() {
+    return new Promise((resolve) => {
+      fetch(`${this.url}notifications/count?apiKey=${this.key}`)
+        .then((result) => {
+          resolve(result.json());
+        });
+    });
+  }
+
+
+  /**
+   * 最新のコメントを取得
+   * @return {Promise<json>}
+   */
+  requestLatestComment() {
+    return new Promise((resolve) => {
+      fetch(`${this.url}notifications?apiKey=${this.key}&count=1`)
+        .then((result) => {
+          resolve(result.json());
+        });
+    });
+  }
+
+
+  /**
+   * お知らせの既読化
+   * @param {string} id - お知らせID
+   */
+  sendNotificationRead(id) {
+    return new Promise((resolve) => {
+      fetch(`${this.url}notifications/${id}/markAsRead?apiKey=${this.key}`, {
+        method: 'POST'
+      })
+        .then((result) => {
+          resolve(result);
+        })
+    });
+  }
+}
+
+
+
+
 (($, chrome) => {
   /**
    * お知らせを取得して変更があれば通知する
@@ -11,6 +72,7 @@
       this.seconds = seconds;
       this.domain = `https://${this.name}.backlog.${this.tld}/`;
       this.url = `${this.domain}api/v2/`;
+      this.requestBacklog = new RequestBacklogApi(name, tld, key);
 
       this.init();
     }
@@ -31,7 +93,7 @@
      * 初期処理
      */
     init() {
-      this.requestCounts()
+      this.requestBacklog.requestCounts()
         .then((payload) => {
           console.log(payload.count);
           this.notificationCount = payload.count;
@@ -40,7 +102,7 @@
       chrome.alarms.create('BACKLOG_NOTIFICATION', {periodInMinutes: 1});
       chrome.alarms.onAlarm.addListener((alarm) => {
         if (alarm.name === 'BACKLOG_NOTIFICATION') {
-          this.requestCounts()
+          this.requestBacklog.requestCounts()
             .then((payload) => {
               console.log(payload.count);
               this.notificationCount = payload.count;
@@ -49,50 +111,13 @@
       });
     }
 
-    /**
-     * 件数の取得
-     */
-    requestCounts() {
-      return new Promise((resolve) => {
-        fetch(`${this.url}notifications/count?apiKey=${this.key}`)
-          .then((result) => {
-            resolve(result.json());
-          });
-      });
-    }
-
-    /**
-     * 最新のコメントを取得
-     */
-    requestLatestComment() {
-      return new Promise((resolve) => {
-        fetch(`${this.url}notifications?apiKey=${this.key}&count=1`)
-          .then((result) => {
-            resolve(result.json());
-          });
-      });
-    }
-
-    /**
-     * お知らせの既読化
-     */
-    sendNotificationRead(id) {
-      return new Promise((resolve) => {
-        fetch(`${this.url}notifications/${id}/markAsRead?apiKey=${this.key}`, {
-          method: 'POST'
-        })
-          .then((result) => {
-            resolve(result);
-          })
-      });
-    }
 
     /**
      * 通知の作成
      */
     createNotification() {
       const id = Math.floor(Math.random() * 9007199254740992) + 1;
-      this.requestLatestComment()
+      this.requestBacklog.requestLatestComment()
         .then((payload) => {
           const data = {
             title: `[${payload[0].issue.issueKey}] ${payload[0].issue.summary}`,
@@ -114,7 +139,7 @@
             priority: 1
           }, (notificationId) => {
             const listener = () => {
-              this.sendNotificationRead(payload[0].id)
+              this.requestBacklog.sendNotificationRead(payload[0].id)
                 .then((result) => {
                   console.log(result);
                 });
