@@ -1,6 +1,7 @@
 import Request from '../request';
 import DesktopNotification from './DesktopNotification';
 import NewsNotification from './NewsNotification';
+import RemindNotification from './RemindNotification';
 
 chrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notification_seconds', 'count'], (value) => {
   const data = value;
@@ -11,6 +12,7 @@ chrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notifica
   }
 
   new NewsNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds, data.count);
+  new RemindNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds);
 });
 
 chrome.runtime.onInstalled.addListener((details) => {
@@ -39,6 +41,7 @@ chrome.notifications.getPermissionLevel((res) => {
       }
 
       new NewsNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds, data.count);
+      new RemindNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds);
     });
   });
 });

@@ -66,6 +66,14 @@ export default {
 
 
   /**
+   * バックログのマイIDのセット
+   */
+  [types.SET_MYSELF](state, payload) {
+    state.myId = payload;
+  },
+
+
+  /**
    * リマインダー範囲の取得
    */
   [types.GET_REMIND_SCOPE](state, payload) {

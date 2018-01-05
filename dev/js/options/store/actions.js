@@ -83,6 +83,16 @@ export default {
 
 
   /**
+   * バックログのマイIDのセット
+   */
+  [types.SET_MYSELF](context, value) {
+    return Request.setMyId(value, (result) => {
+      this.commit(types.SET_MYSELF, result);
+    });
+  },
+
+
+  /**
    * リマインダー範囲の取得
    */
   [types.GET_REMIND_SCOPE](context) {

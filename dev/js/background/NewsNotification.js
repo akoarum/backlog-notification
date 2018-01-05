@@ -42,17 +42,15 @@ export default class NewsNotification {
       this.notificationCount = payload.count;
     });
 
-    chrome.alarms.create('BACKLOG_NOTIFICATION', {periodInMinutes: 1});
+    chrome.alarms.create('BACKLOG_NOTIFICATION_NEWS', { periodInMinutes: 1 });
     chrome.alarms.onAlarm.addListener((alarm) => {
-      if (alarm.name === 'BACKLOG_NOTIFICATION') {
+      if (alarm.name === 'BACKLOG_NOTIFICATION_NEWS') {
         Request.requestCounts(this.name, this.tld, this.key).then((payload) => {
           console.log(payload.count);
           this.notificationCount = payload.count;
         });
       }
     });
-
-    this.notification();
   }
 
 

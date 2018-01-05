@@ -233,4 +233,36 @@ export default new class Request {
       });
     });
   }
+
+
+  /**
+   * 課題一覧の取得
+   * @param {string} backlogName - バックログスペース名
+   * @param {string} backlogTld - バックログのトップレベルドメイン
+   * @param {string} backlogKey - バックログのAPIキー
+   * @param {object} query - クエリ
+   * @return {Promise<json>}
+   */
+  requestIssues(backlogName, backlogTld, backlogKey, query = {}) {
+    let url = `https://${ backlogName }.backlog.${ backlogTld }/api/v2/issues?apiKey=${ backlogKey }`;
+
+    if (Object.keys(query).length) {
+      for (let param in query) {
+        if (Array.isArray(query[param])) {
+          for (let value of query[param]) {
+            url += `&${ param }[]=${ value }`;
+          }
+          continue;
+        }
+
+        url += `&${ param }=${ query[param] }`;
+      }
+    }
+
+    return new Promise((resolve) => {
+      fetch(url).then((result) => {
+        resolve(result.json());
+      });
+    });
+  }
 }

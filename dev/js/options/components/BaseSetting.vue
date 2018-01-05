@@ -100,6 +100,7 @@ export default {
 
         Promise.all(init).then(() => {
           this.completed = true;
+          this.$store.dispatch(types.SET_MYSELF, this.$store.state.myId);
         });
       });
     }
