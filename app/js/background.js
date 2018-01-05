@@ -1,222 +1,115 @@
-/**
- * バックログAPIへのリクエスト
- * @param {string} name - バックログスペースの名前
- * @param {string} tld - バックログスペースのトップレベルドメイン
- * @param {string} key - バックログのAPIキー
- */
-class RequestBacklogApi {
-  constructor(name, tld, key) {
-    this.domain = `https://${name}.backlog.${tld}/`;
-    this.url = `${this.domain}api/v2/`;
-    this.key = key;
-  }
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/*!************************************!*\
+  !*** ./dev/js/background/index.js ***!
+  \************************************/
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+eval("\n\nvar _request = __webpack_require__(/*! ../request */ 3);\n\nvar _request2 = _interopRequireDefault(_request);\n\nvar _DesktopNotification = __webpack_require__(/*! ./DesktopNotification */ 1);\n\nvar _DesktopNotification2 = _interopRequireDefault(_DesktopNotification);\n\nvar _NewsNotification = __webpack_require__(/*! ./NewsNotification */ 2);\n\nvar _NewsNotification2 = _interopRequireDefault(_NewsNotification);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nchrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notification_seconds', 'count'], function (value) {\n  var data = value;\n\n  // KEYがなければ終了\n  if (!data.backlog_name || !data.backlog_tld || !data.backlog_key) {\n    return;\n  }\n\n  new _NewsNotification2.default(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds, data.count);\n});\n\nchrome.runtime.onInstalled.addListener(function (details) {\n  if (details.reason !== 'install') {\n    return;\n  }\n  if (chrome.runtime.openOptionsPage) {\n    chrome.runtime.openOptionsPage();\n  } else {\n    window.open(chrome.runtime.getURL('options.html'));\n  }\n});\n\nchrome.notifications.getPermissionLevel(function (res) {\n  chrome.storage.onChanged.addListener(function (changes) {\n    if ('count' in changes) {\n      return;\n    }\n\n    chrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notification_seconds', 'count'], function (value) {\n      var data = value;\n\n      // KEYがなければ終了\n      if (!data.backlog_name || !data.backlog_tld || !data.backlog_key) {\n        return;\n      }\n\n      new _NewsNotification2.default(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds, data.count);\n    });\n  });\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy9kZXYvanMvYmFja2dyb3VuZC9pbmRleC5qcz9hYjlkIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZXF1ZXN0IGZyb20gJy4uL3JlcXVlc3QnO1xuaW1wb3J0IERlc2t0b3BOb3RpZmljYXRpb24gZnJvbSAnLi9EZXNrdG9wTm90aWZpY2F0aW9uJztcbmltcG9ydCBOZXdzTm90aWZpY2F0aW9uIGZyb20gJy4vTmV3c05vdGlmaWNhdGlvbic7XG5cbmNocm9tZS5zdG9yYWdlLnN5bmMuZ2V0KFsnYmFja2xvZ19uYW1lJywgJ2JhY2tsb2dfdGxkJywgJ2JhY2tsb2dfa2V5JywgJ25vdGlmaWNhdGlvbl9zZWNvbmRzJywgJ2NvdW50J10sICh2YWx1ZSkgPT4ge1xuICBjb25zdCBkYXRhID0gdmFsdWU7XG5cbiAgLy8gS0VZ44GM44Gq44GR44KM44Gw57WC5LqGXG4gIGlmICghZGF0YS5iYWNrbG9nX25hbWUgfHwgIWRhdGEuYmFja2xvZ190bGQgfHwgIWRhdGEuYmFja2xvZ19rZXkpIHtcbiAgICByZXR1cm47XG4gIH1cblxuICBuZXcgTmV3c05vdGlmaWNhdGlvbihkYXRhLmJhY2tsb2dfbmFtZSwgZGF0YS5iYWNrbG9nX3RsZCwgZGF0YS5iYWNrbG9nX2tleSwgZGF0YS5ub3RpZmljYXRpb25fc2Vjb25kcywgZGF0YS5jb3VudCk7XG59KTtcblxuY2hyb21lLnJ1bnRpbWUub25JbnN0YWxsZWQuYWRkTGlzdGVuZXIoKGRldGFpbHMpID0+IHtcbiAgaWYgKGRldGFpbHMucmVhc29uICE9PSAnaW5zdGFsbCcpIHtcbiAgICByZXR1cm47XG4gIH1cbiAgaWYgKGNocm9tZS5ydW50aW1lLm9wZW5PcHRpb25zUGFnZSkge1xuICAgIGNocm9tZS5ydW50aW1lLm9wZW5PcHRpb25zUGFnZSgpO1xuICB9IGVsc2Uge1xuICAgIHdpbmRvdy5vcGVuKGNocm9tZS5ydW50aW1lLmdldFVSTCgnb3B0aW9ucy5odG1sJykpO1xuICB9XG59KTtcblxuY2hyb21lLm5vdGlmaWNhdGlvbnMuZ2V0UGVybWlzc2lvbkxldmVsKChyZXMpID0+IHtcbiAgY2hyb21lLnN0b3JhZ2Uub25DaGFuZ2VkLmFkZExpc3RlbmVyKChjaGFuZ2VzKSA9PiB7XG4gICAgaWYgKCdjb3VudCcgaW4gY2hhbmdlcykge1xuICAgICAgcmV0dXJuO1xuICAgIH1cblxuICAgIGNocm9tZS5zdG9yYWdlLnN5bmMuZ2V0KFsnYmFja2xvZ19uYW1lJywgJ2JhY2tsb2dfdGxkJywgJ2JhY2tsb2dfa2V5JywgJ25vdGlmaWNhdGlvbl9zZWNvbmRzJywgJ2NvdW50J10sICh2YWx1ZSkgPT4ge1xuICAgICAgY29uc3QgZGF0YSA9IHZhbHVlO1xuXG4gICAgICAvLyBLRVnjgYzjgarjgZHjgozjgbDntYLkuoZcbiAgICAgIGlmICghZGF0YS5iYWNrbG9nX25hbWUgfHwgIWRhdGEuYmFja2xvZ190bGQgfHwgIWRhdGEuYmFja2xvZ19rZXkpIHtcbiAgICAgICAgcmV0dXJuO1xuICAgICAgfVxuXG4gICAgICBuZXcgTmV3c05vdGlmaWNhdGlvbihkYXRhLmJhY2tsb2dfbmFtZSwgZGF0YS5iYWNrbG9nX3RsZCwgZGF0YS5iYWNrbG9nX2tleSwgZGF0YS5ub3RpZmljYXRpb25fc2Vjb25kcywgZGF0YS5jb3VudCk7XG4gICAgfSk7XG4gIH0pO1xufSk7XG5cblxuXG4vLyBXRUJQQUNLIEZPT1RFUiAvL1xuLy8gZGV2L2pzL2JhY2tncm91bmQvaW5kZXguanMiXSwibWFwcGluZ3MiOiI7O0FBQUE7QUFDQTs7O0FBQUE7QUFDQTs7O0FBQUE7QUFDQTs7Ozs7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///0\n");
 
-  /**
-   * お知らせ件数の取得
-   * @return {Promise<json>}
-   */
-  requestCounts() {
-    return new Promise((resolve) => {
-      fetch(`${this.url}notifications/count?apiKey=${this.key}`)
-        .then((result) => {
-          resolve(result.json());
-        });
-    });
-  }
+/***/ }),
+/* 1 */
+/*!**************************************************!*\
+  !*** ./dev/js/background/DesktopNotification.js ***!
+  \**************************************************/
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();\n\nvar _request = __webpack_require__(/*! ../request */ 3);\n\nvar _request2 = _interopRequireDefault(_request);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n/**\n * デスクトップ通知\n * @param {string} name - バックログスペース名\n * @param {string} tld - バックログドメイン名\n * @param {string} key - バックログAPIキー\n * @param {string|number} seconds - 通知の表示時間\n */\nvar DesktopNotification = function () {\n  function DesktopNotification(name, tld, key, seconds) {\n    _classCallCheck(this, DesktopNotification);\n\n    this.name = name;\n    this.tld = tld;\n    this.key = key;\n    this.seconds = seconds;\n  }\n\n  /**\n   * 通知の作成\n   * @param {object} - title, message, context, url, id を包含するオブジェクト\n   */\n\n\n  _createClass(DesktopNotification, [{\n    key: 'create',\n    value: function create(_ref) {\n      var _this = this;\n\n      var title = _ref.title,\n          message = _ref.message,\n          context = _ref.context,\n          url = _ref.url,\n          id = _ref.id;\n\n      var originalId = Math.floor(Math.random() * 9007199254740992) + 1;\n\n      chrome.notifications.create('backlogNotification_' + this.key + '_' + originalId, {\n        type: 'basic',\n        iconUrl: 'https://' + this.name + '.backlog.' + this.tld + '/favicon.ico',\n        title: title,\n        message: message,\n        contextMessage: context,\n        priority: 1\n      }, function (notificationId) {\n        var listener = function listener() {\n          _request2.default.sendNotificationRead(_this.name, _this.tld, _this.key, id).then(function (result) {\n            console.log(result);\n          });\n          chrome.tabs.create({\n            url: url\n          });\n          chrome.notifications.onClicked.removeListener(listener);\n          chrome.notifications.clear(notificationId);\n        };\n\n        chrome.notifications.onClicked.addListener(listener);\n        chrome.notifications.onClosed.addListener(function () {\n          chrome.notifications.onClicked.removeListener(listener);\n          chrome.notifications.clear(notificationId);\n        });\n        _this.close(notificationId, listener);\n      });\n    }\n\n    /**\n     * デスクトップ通知の自動クローズ\n     * @param {string} notificationId - 通知を発行した際にセットされる通知ID\n     * @param {void} listener - 通知に設定されたリスナー関数\n     */\n\n  }, {\n    key: 'close',\n    value: function close(notificationId, listener) {\n      if (this.seconds === 'not') {\n        return;\n      }\n      chrome.alarms.create('autoClose', {\n        when: Date.now() + Number(this.seconds) * 1000\n      });\n      chrome.alarms.onAlarm.addListener(function (alarm) {\n        if (alarm && alarm.name === 'autoClose') {\n          chrome.notifications.onClicked.removeListener(listener);\n          chrome.notifications.clear(notificationId);\n        }\n      });\n    }\n  }]);\n\n  return DesktopNotification;\n}();\n\nexports.default = DesktopNotification;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMS5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy9kZXYvanMvYmFja2dyb3VuZC9EZXNrdG9wTm90aWZpY2F0aW9uLmpzP2NjNzUiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlcXVlc3QgZnJvbSAnLi4vcmVxdWVzdCc7XG5cbi8qKlxuICog44OH44K544Kv44OI44OD44OX6YCa55+lXG4gKiBAcGFyYW0ge3N0cmluZ30gbmFtZSAtIOODkOODg+OCr+ODreOCsOOCueODmuODvOOCueWQjVxuICogQHBhcmFtIHtzdHJpbmd9IHRsZCAtIOODkOODg+OCr+ODreOCsOODieODoeOCpOODs+WQjVxuICogQHBhcmFtIHtzdHJpbmd9IGtleSAtIOODkOODg+OCr+ODreOCsEFQSeOCreODvFxuICogQHBhcmFtIHtzdHJpbmd8bnVtYmVyfSBzZWNvbmRzIC0g6YCa55+l44Gu6KGo56S65pmC6ZaTXG4gKi9cbmV4cG9ydCBkZWZhdWx0IGNsYXNzIERlc2t0b3BOb3RpZmljYXRpb24ge1xuICBjb25zdHJ1Y3RvcihuYW1lLCB0bGQsIGtleSwgc2Vjb25kcykge1xuICAgIHRoaXMubmFtZSA9IG5hbWU7XG4gICAgdGhpcy50bGQgPSB0bGQ7XG4gICAgdGhpcy5rZXkgPSBrZXk7XG4gICAgdGhpcy5zZWNvbmRzID0gc2Vjb25kcztcbiAgfVxuXG5cbiAgLyoqXG4gICAqIOmAmuefpeOBruS9nOaIkFxuICAgKiBAcGFyYW0ge29iamVjdH0gLSB0aXRsZSwgbWVzc2FnZSwgY29udGV4dCwgdXJsLCBpZCDjgpLljIXlkKvjgZnjgovjgqrjg5bjgrjjgqfjgq/jg4hcbiAgICovXG4gIGNyZWF0ZSh7IHRpdGxlLCBtZXNzYWdlLCBjb250ZXh0LCB1cmwsIGlkIH0pIHtcbiAgICBjb25zdCBvcmlnaW5hbElkID0gTWF0aC5mbG9vcihNYXRoLnJhbmRvbSgpICogOTAwNzE5OTI1NDc0MDk5MikgKyAxO1xuXG4gICAgY2hyb21lLm5vdGlmaWNhdGlvbnMuY3JlYXRlKGBiYWNrbG9nTm90aWZpY2F0aW9uXyR7IHRoaXMua2V5IH1fJHsgb3JpZ2luYWxJZCB9YCwge1xuICAgICAgdHlwZTogJ2Jhc2ljJyxcbiAgICAgIGljb25Vcmw6IGBodHRwczovLyR7IHRoaXMubmFtZSB9LmJhY2tsb2cuJHsgdGhpcy50bGQgfS9mYXZpY29uLmljb2AsXG4gICAgICB0aXRsZTogdGl0bGUsXG4gICAgICBtZXNzYWdlOiBtZXNzYWdlLFxuICAgICAgY29udGV4dE1lc3NhZ2U6IGNvbnRleHQsXG4gICAgICBwcmlvcml0eTogMVxuICAgIH0sIChub3RpZmljYXRpb25JZCkgPT4ge1xuICAgICAgY29uc3QgbGlzdGVuZXIgPSAoKSA9PiB7XG4gICAgICAgIFJlcXVlc3Quc2VuZE5vdGlmaWNhdGlvblJlYWQodGhpcy5uYW1lLCB0aGlzLnRsZCwgdGhpcy5rZXksIGlkKS50aGVuKChyZXN1bHQpID0+IHtcbiAgICAgICAgICBjb25zb2xlLmxvZyhyZXN1bHQpO1xuICAgICAgICB9KTtcbiAgICAgICAgY2hyb21lLnRhYnMuY3JlYXRlKHtcbiAgICAgICAgICB1cmw6IHVybFxuICAgICAgICB9KTtcbiAgICAgICAgY2hyb21lLm5vdGlmaWNhdGlvbnMub25DbGlja2VkLnJlbW92ZUxpc3RlbmVyKGxpc3RlbmVyKTtcbiAgICAgICAgY2hyb21lLm5vdGlmaWNhdGlvbnMuY2xlYXIobm90aWZpY2F0aW9uSWQpO1xuICAgICAgfTtcblxuICAgICAgY2hyb21lLm5vdGlmaWNhdGlvbnMub25DbGlja2VkLmFkZExpc3RlbmVyKGxpc3RlbmVyKTtcbiAgICAgIGNocm9tZS5ub3RpZmljYXRpb25zLm9uQ2xvc2VkLmFkZExpc3RlbmVyKCgpID0+IHtcbiAgICAgICAgY2hyb21lLm5vdGlmaWNhdGlvbnMub25DbGlja2VkLnJlbW92ZUxpc3RlbmVyKGxpc3RlbmVyKTtcbiAgICAgICAgY2hyb21lLm5vdGlmaWNhdGlvbnMuY2xlYXIobm90aWZpY2F0aW9uSWQpO1xuICAgICAgfSk7XG4gICAgICB0aGlzLmNsb3NlKG5vdGlmaWNhdGlvbklkLCBsaXN0ZW5lcik7XG4gICAgfSk7XG4gIH1cblxuXG4gIC8qKlxuICAgKiDjg4fjgrnjgq/jg4jjg4Pjg5fpgJrnn6Xjga7oh6rli5Xjgq/jg63jg7zjgrpcbiAgICogQHBhcmFtIHtzdHJpbmd9IG5vdGlmaWNhdGlvbklkIC0g6YCa55+l44KS55m66KGM44GX44Gf6Zqb44Gr44K744OD44OI44GV44KM44KL6YCa55+lSURcbiAgICogQHBhcmFtIHt2b2lkfSBsaXN0ZW5lciAtIOmAmuefpeOBq+ioreWumuOBleOCjOOBn+ODquOCueODiuODvOmWouaVsFxuICAgKi9cbiAgY2xvc2Uobm90aWZpY2F0aW9uSWQsIGxpc3RlbmVyKSB7XG4gICAgaWYgKHRoaXMuc2Vjb25kcyA9PT0gJ25vdCcpIHtcbiAgICAgIHJldHVybjtcbiAgICB9XG4gICAgY2hyb21lLmFsYXJtcy5jcmVhdGUoJ2F1dG9DbG9zZScsIHtcbiAgICAgIHdoZW46IERhdGUubm93KCkgKyAoTnVtYmVyKHRoaXMuc2Vjb25kcykgKiAxMDAwKVxuICAgIH0pXG4gICAgY2hyb21lLmFsYXJtcy5vbkFsYXJtLmFkZExpc3RlbmVyKChhbGFybSkgPT4ge1xuICAgICAgaWYgKGFsYXJtICYmIGFsYXJtLm5hbWUgPT09ICdhdXRvQ2xvc2UnKSB7XG4gICAgICAgIGNocm9tZS5ub3RpZmljYXRpb25zLm9uQ2xpY2tlZC5yZW1vdmVMaXN0ZW5lcihsaXN0ZW5lcik7XG4gICAgICAgIGNocm9tZS5ub3RpZmljYXRpb25zLmNsZWFyKG5vdGlmaWNhdGlvbklkKTtcbiAgICAgIH1cbiAgICB9KTtcbiAgfVxufVxuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIGRldi9qcy9iYWNrZ3JvdW5kL0Rlc2t0b3BOb3RpZmljYXRpb24uanMiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7O0FBQUE7QUFDQTs7Ozs7OztBQUNBOzs7Ozs7O0FBT0E7QUFDQTtBQUFBO0FBQ0E7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFFQTs7Ozs7Ozs7QUFJQTtBQUFBO0FBQ0E7QUFEQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQ0E7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFOQTtBQVFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQURBO0FBR0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFFQTs7Ozs7Ozs7QUFLQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFEQTtBQUdBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOzs7Ozs7QUEvREEiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///1\n");
 
-  /**
-   * 最新のコメントを取得
-   * @return {Promise<json>}
-   */
-  requestLatestComment() {
-    return new Promise((resolve) => {
-      fetch(`${this.url}notifications?apiKey=${this.key}&count=1`)
-        .then((result) => {
-          resolve(result.json());
-        });
-    });
-  }
+/***/ }),
+/* 2 */
+/*!***********************************************!*\
+  !*** ./dev/js/background/NewsNotification.js ***!
+  \***********************************************/
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();\n\nvar _request = __webpack_require__(/*! ../request */ 3);\n\nvar _request2 = _interopRequireDefault(_request);\n\nvar _DesktopNotification = __webpack_require__(/*! ./DesktopNotification */ 1);\n\nvar _DesktopNotification2 = _interopRequireDefault(_DesktopNotification);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n/**\n * お知らせ通知\n * @param {string} name - バックログスペース名\n * @param {string} tld - バックログドメイン名\n * @param {string} key - バックログAPIキー\n * @param {string|number} seconds - 通知の表示時間\n * @param {number} count - バックログのお知らせの件数\n */\nvar NewsNotification = function () {\n  function NewsNotification(name, tld, key, seconds, count) {\n    _classCallCheck(this, NewsNotification);\n\n    this.name = name;\n    this.tld = tld;\n    this.key = key;\n    this.count = count;\n    this.domain = 'https://' + this.name + '.backlog.' + this.tld + '/';\n    this.desktopNotification = new _DesktopNotification2.default(this.name, this.tld, this.key, seconds);\n\n    this.init();\n  }\n\n  _createClass(NewsNotification, [{\n    key: 'init',\n\n\n    /**\n     * 初期処理\n     */\n    value: function init() {\n      var _this = this;\n\n      _request2.default.requestCounts(this.name, this.tld, this.key).then(function (payload) {\n        _this.notificationCount = payload.count;\n      });\n\n      chrome.alarms.create('BACKLOG_NOTIFICATION', { periodInMinutes: 1 });\n      chrome.alarms.onAlarm.addListener(function (alarm) {\n        if (alarm.name === 'BACKLOG_NOTIFICATION') {\n          _request2.default.requestCounts(_this.name, _this.tld, _this.key).then(function (payload) {\n            console.log(payload.count);\n            _this.notificationCount = payload.count;\n          });\n        }\n      });\n\n      this.notification();\n    }\n\n    /**\n     * 通知の作成\n     */\n\n  }, {\n    key: 'notification',\n    value: function notification() {\n      var _this2 = this;\n\n      _request2.default.requestLatestComment(this.name, this.tld, this.key).then(function (payload) {\n        var data = {\n          title: '[' + payload[0].issue.issueKey + '] ' + payload[0].issue.summary,\n          message: payload[0].comment.content,\n          context: payload[0].comment.createdUser.name,\n          url: _this2.domain + 'view/' + payload[0].issue.issueKey,\n          id: payload[0].id\n        };\n\n        if (payload[0].comment.content) {\n          data.url += '#comment-' + payload[0].comment.id;\n        }\n\n        _this2.desktopNotification.create(data);\n      });\n    }\n  }, {\n    key: 'notificationCount',\n    get: function get() {\n      return this.count;\n    },\n    set: function set(value) {\n      if (this.count === value) {\n        return;\n      }\n      this.count = value;\n      chrome.storage.sync.set({ 'count': value }, function () {});\n      this.notification();\n    }\n  }]);\n\n  return NewsNotification;\n}();\n\nexports.default = NewsNotification;//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMi5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy9kZXYvanMvYmFja2dyb3VuZC9OZXdzTm90aWZpY2F0aW9uLmpzP2RjNGQiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlcXVlc3QgZnJvbSAnLi4vcmVxdWVzdCc7XG5pbXBvcnQgRGVza3RvcE5vdGlmaWNhdGlvbiBmcm9tICcuL0Rlc2t0b3BOb3RpZmljYXRpb24nO1xuXG4vKipcbiAqIOOBiuefpeOCieOBm+mAmuefpVxuICogQHBhcmFtIHtzdHJpbmd9IG5hbWUgLSDjg5Djg4Pjgq/jg63jgrDjgrnjg5rjg7zjgrnlkI1cbiAqIEBwYXJhbSB7c3RyaW5nfSB0bGQgLSDjg5Djg4Pjgq/jg63jgrDjg4njg6HjgqTjg7PlkI1cbiAqIEBwYXJhbSB7c3RyaW5nfSBrZXkgLSDjg5Djg4Pjgq/jg63jgrBBUEnjgq3jg7xcbiAqIEBwYXJhbSB7c3RyaW5nfG51bWJlcn0gc2Vjb25kcyAtIOmAmuefpeOBruihqOekuuaZgumWk1xuICogQHBhcmFtIHtudW1iZXJ9IGNvdW50IC0g44OQ44OD44Kv44Ot44Kw44Gu44GK55+l44KJ44Gb44Gu5Lu25pWwXG4gKi9cbmV4cG9ydCBkZWZhdWx0IGNsYXNzIE5ld3NOb3RpZmljYXRpb24ge1xuICBjb25zdHJ1Y3RvcihuYW1lLCB0bGQsIGtleSwgc2Vjb25kcywgY291bnQpIHtcbiAgICB0aGlzLm5hbWUgPSBuYW1lO1xuICAgIHRoaXMudGxkID0gdGxkO1xuICAgIHRoaXMua2V5ID0ga2V5O1xuICAgIHRoaXMuY291bnQgPSBjb3VudDtcbiAgICB0aGlzLmRvbWFpbiA9IGBodHRwczovLyR7IHRoaXMubmFtZSB9LmJhY2tsb2cuJHsgdGhpcy50bGQgfS9gO1xuICAgIHRoaXMuZGVza3RvcE5vdGlmaWNhdGlvbiA9IG5ldyBEZXNrdG9wTm90aWZpY2F0aW9uKHRoaXMubmFtZSwgdGhpcy50bGQsIHRoaXMua2V5LCBzZWNvbmRzKTtcblxuICAgIHRoaXMuaW5pdCgpO1xuICB9XG5cbiAgZ2V0IG5vdGlmaWNhdGlvbkNvdW50KCkge1xuICAgIHJldHVybiB0aGlzLmNvdW50O1xuICB9XG4gIHNldCBub3RpZmljYXRpb25Db3VudCh2YWx1ZSkge1xuICAgIGlmICh0aGlzLmNvdW50ID09PSB2YWx1ZSkge1xuICAgICAgcmV0dXJuO1xuICAgIH1cbiAgICB0aGlzLmNvdW50ID0gdmFsdWU7XG4gICAgY2hyb21lLnN0b3JhZ2Uuc3luYy5zZXQoeyAnY291bnQnOiB2YWx1ZSB9LCAoKSA9PiB7fSk7XG4gICAgdGhpcy5ub3RpZmljYXRpb24oKTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIOWIneacn+WHpueQhlxuICAgKi9cbiAgaW5pdCgpIHtcbiAgICBSZXF1ZXN0LnJlcXVlc3RDb3VudHModGhpcy5uYW1lLCB0aGlzLnRsZCwgdGhpcy5rZXkpLnRoZW4oKHBheWxvYWQpID0+IHtcbiAgICAgIHRoaXMubm90aWZpY2F0aW9uQ291bnQgPSBwYXlsb2FkLmNvdW50O1xuICAgIH0pO1xuXG4gICAgY2hyb21lLmFsYXJtcy5jcmVhdGUoJ0JBQ0tMT0dfTk9USUZJQ0FUSU9OJywge3BlcmlvZEluTWludXRlczogMX0pO1xuICAgIGNocm9tZS5hbGFybXMub25BbGFybS5hZGRMaXN0ZW5lcigoYWxhcm0pID0+IHtcbiAgICAgIGlmIChhbGFybS5uYW1lID09PSAnQkFDS0xPR19OT1RJRklDQVRJT04nKSB7XG4gICAgICAgIFJlcXVlc3QucmVxdWVzdENvdW50cyh0aGlzLm5hbWUsIHRoaXMudGxkLCB0aGlzLmtleSkudGhlbigocGF5bG9hZCkgPT4ge1xuICAgICAgICAgIGNvbnNvbGUubG9nKHBheWxvYWQuY291bnQpO1xuICAgICAgICAgIHRoaXMubm90aWZpY2F0aW9uQ291bnQgPSBwYXlsb2FkLmNvdW50O1xuICAgICAgICB9KTtcbiAgICAgIH1cbiAgICB9KTtcblxuICAgIHRoaXMubm90aWZpY2F0aW9uKCk7XG4gIH1cblxuXG4gIC8qKlxuICAgKiDpgJrnn6Xjga7kvZzmiJBcbiAgICovXG4gIG5vdGlmaWNhdGlvbigpIHtcbiAgICBSZXF1ZXN0LnJlcXVlc3RMYXRlc3RDb21tZW50KHRoaXMubmFtZSwgdGhpcy50bGQsIHRoaXMua2V5KS50aGVuKChwYXlsb2FkKSA9PiB7XG4gICAgICBjb25zdCBkYXRhID0ge1xuICAgICAgICB0aXRsZTogYFske3BheWxvYWRbMF0uaXNzdWUuaXNzdWVLZXl9XSAke3BheWxvYWRbMF0uaXNzdWUuc3VtbWFyeX1gLFxuICAgICAgICBtZXNzYWdlOiBwYXlsb2FkWzBdLmNvbW1lbnQuY29udGVudCxcbiAgICAgICAgY29udGV4dDogcGF5bG9hZFswXS5jb21tZW50LmNyZWF0ZWRVc2VyLm5hbWUsXG4gICAgICAgIHVybDogYCR7dGhpcy5kb21haW59dmlldy8ke3BheWxvYWRbMF0uaXNzdWUuaXNzdWVLZXl9YCxcbiAgICAgICAgaWQ6IHBheWxvYWRbMF0uaWRcbiAgICAgIH07XG5cbiAgICAgIGlmIChwYXlsb2FkWzBdLmNvbW1lbnQuY29udGVudCkge1xuICAgICAgICBkYXRhLnVybCArPSBgI2NvbW1lbnQtJHtwYXlsb2FkWzBdLmNvbW1lbnQuaWR9YDtcbiAgICAgIH1cblxuICAgICAgdGhpcy5kZXNrdG9wTm90aWZpY2F0aW9uLmNyZWF0ZShkYXRhKTtcbiAgICB9KTtcbiAgfVxufVxuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIGRldi9qcy9iYWNrZ3JvdW5kL05ld3NOb3RpZmljYXRpb24uanMiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7O0FBQUE7QUFDQTs7O0FBQUE7QUFDQTs7Ozs7OztBQUNBOzs7Ozs7OztBQVFBO0FBQ0E7QUFBQTtBQUNBO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7Ozs7O0FBY0E7OztBQUdBO0FBQUE7QUFDQTtBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFFQTs7Ozs7O0FBR0E7QUFBQTtBQUNBO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFMQTtBQUNBO0FBT0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7OztBQXREQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOzs7Ozs7QUF0QkEiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///2\n");
 
-  /**
-   * お知らせの既読化
-   * @param {string} id - お知らせID
-   */
-  sendNotificationRead(id) {
-    return new Promise((resolve) => {
-      fetch(`${this.url}notifications/${id}/markAsRead?apiKey=${this.key}`, {
-        method: 'POST'
-      })
-        .then((result) => {
-          resolve(result);
-        })
-    });
-  }
-}
+/***/ }),
+/* 3 */
+/*!***************************!*\
+  !*** ./dev/js/request.js ***!
+  \***************************/
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nexports.default = new (function () {\n  function Request() {\n    _classCallCheck(this, Request);\n  }\n\n  /**\n   * バックログスペース名の取得\n   * @param {void} resolve\n   */\n\n\n  _createClass(Request, [{\n    key: 'getBacklogName',\n    value: function getBacklogName(resolve) {\n      chrome.storage.sync.get(['backlog_name'], resolve);\n    }\n\n    /**\n     * バックログスペース名のセット\n     * @param {string} name\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'setBacklogName',\n    value: function setBacklogName(name, resolve) {\n      chrome.storage.sync.set({ 'backlog_name': name }, resolve(name));\n    }\n\n    /**\n     * トップレベルドメインの取得\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'getBacklogTld',\n    value: function getBacklogTld(resolve) {\n      chrome.storage.sync.get(['backlog_tld'], resolve);\n    }\n\n    /**\n     * トップレベルドメインのセット\n     * @param {string} tld\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'setBacklogTld',\n    value: function setBacklogTld(tld, resolve) {\n      chrome.storage.sync.set({ 'backlog_tld': tld }, resolve(tld));\n    }\n\n    /**\n     * APIキーの取得\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'getBacklogKey',\n    value: function getBacklogKey(resolve) {\n      chrome.storage.sync.get(['backlog_key'], resolve);\n    }\n\n    /**\n     * APIキーのセット\n     * @param {string} key\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'setBacklogKey',\n    value: function setBacklogKey(key, resolve) {\n      chrome.storage.sync.set({ 'backlog_key': key }, resolve(key));\n    }\n\n    /**\n     * 通知秒数の取得\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'getNotificationSeconds',\n    value: function getNotificationSeconds(resolve) {\n      chrome.storage.sync.get(['notification_seconds'], resolve);\n    }\n\n    /**\n     * 通知秒数のセット\n     * @param {number} seconds\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'setNotificationSeconds',\n    value: function setNotificationSeconds(seconds, resolve) {\n      chrome.storage.sync.set({ 'notification_seconds': seconds }, resolve(seconds));\n    }\n\n    /**\n     * Storageからお知らせ件数の取得\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'getNotificationCounts',\n    value: function getNotificationCounts(resolve) {\n      chrome.storage.sync.get(['count'], resolve);\n    }\n\n    /**\n     * Storageにお知らせ件数のセット\n     * @param {number} size\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'setNotificationCounts',\n    value: function setNotificationCounts(size, resolve) {\n      chrome.storage.sync.set({ 'count': size }, resolve(size));\n    }\n\n    /**\n     * リマインド対象範囲の取得\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'getRemindScope',\n    value: function getRemindScope(resolve) {\n      chrome.storage.sync.get(['remind_scope'], resolve);\n    }\n\n    /**\n     * リマインド対象範囲のセット\n     * @param {object} data\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'setRemindScope',\n    value: function setRemindScope(data, resolve) {\n      chrome.storage.sync.set({ 'remind_scope': data }, resolve(data));\n    }\n\n    /**\n     * リマインドのタイミング取得\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'getRemindTiming',\n    value: function getRemindTiming(resolve) {\n      chrome.storage.sync.get(['remind_timing'], resolve);\n    }\n\n    /**\n     * リマインドのタイミングのセット\n     * @param {object} date\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'setRemindTiming',\n    value: function setRemindTiming(date, resolve) {\n      chrome.storage.sync.set({ 'remind_timing': date }, resolve(date));\n    }\n\n    /**\n     * 自分のID取得\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'getMyId',\n    value: function getMyId(resolve) {\n      chrome.storage.sync.get(['my_id'], resolve);\n    }\n\n    /**\n     * 自分のIDのセット\n     * @param {string} id\n     * @param {void} resolve\n     */\n\n  }, {\n    key: 'setMyId',\n    value: function setMyId(id, resolve) {\n      chrome.storage.sync.set({ 'my_id': id }, resolve(id));\n    }\n\n    /**\n     * バックログAPI: 認証ユーザー情報の取得\n     * @param {string} backlogName - バックログスペース名\n     * @param {string} backlogTld - バックログのトップレベルドメイン\n     * @param {string} backlogKey - バックログのAPIキー\n     * @return {Promise<json>}\n     */\n\n  }, {\n    key: 'requestMyself',\n    value: function requestMyself(backlogName, backlogTld, backlogKey) {\n      return new Promise(function (resolve) {\n        fetch('https://' + backlogName + '.backlog.' + backlogTld + '/api/v2/users/myself?apiKey=' + backlogKey).then(function (result) {\n          resolve(result.json());\n        });\n      });\n    }\n\n    /**\n     * バックログAPI: プロジェクト情報の取得\n     * @param {string} backlogName - バックログスペース名\n     * @param {string} backlogTld - バックログのトップレベルドメイン\n     * @param {string} backlogKey - バックログのAPIキー\n     * @return {Promise<json>}\n     */\n\n  }, {\n    key: 'requestProjects',\n    value: function requestProjects(backlogName, backlogTld, backlogKey) {\n      return new Promise(function (resolve) {\n        fetch('https://' + backlogName + '.backlog.' + backlogTld + '/api/v2/projects?apiKey=' + backlogKey).then(function (result) {\n          resolve(result.json());\n        });\n      });\n    }\n\n    /**\n     * お知らせ件数の取得\n     * @param {string} backlogName - バックログスペース名\n     * @param {string} backlogTld - バックログのトップレベルドメイン\n     * @param {string} backlogKey - バックログのAPIキー\n     * @return {Promise<json>}\n     */\n\n  }, {\n    key: 'requestCounts',\n    value: function requestCounts(backlogName, backlogTld, backlogKey) {\n      return new Promise(function (resolve) {\n        fetch('https://' + backlogName + '.backlog.' + backlogTld + '/api/v2/notifications/count?apiKey=' + backlogKey).then(function (result) {\n          resolve(result.json());\n        });\n      });\n    }\n\n    /**\n     * 最新のコメントを取得\n     * @param {string} backlogName - バックログスペース名\n     * @param {string} backlogTld - バックログのトップレベルドメイン\n     * @param {string} backlogKey - バックログのAPIキー\n     * @return {Promise<json>}\n     */\n\n  }, {\n    key: 'requestLatestComment',\n    value: function requestLatestComment(backlogName, backlogTld, backlogKey) {\n      return new Promise(function (resolve) {\n        fetch('https://' + backlogName + '.backlog.' + backlogTld + '/api/v2/notifications?apiKey=' + backlogKey + '&count=1').then(function (result) {\n          resolve(result.json());\n        });\n      });\n    }\n\n    /**\n     * お知らせの既読化\n     * @param {string} backlogName - バックログスペース名\n     * @param {string} backlogTld - バックログのトップレベルドメイン\n     * @param {string} backlogKey - バックログのAPIキー\n     * @param {string} id - お知らせID\n     * @return {Promise<json>}\n     */\n\n  }, {\n    key: 'sendNotificationRead',\n    value: function sendNotificationRead(backlogName, backlogTld, backlogKey, id) {\n      return new Promise(function (resolve) {\n        fetch('https://' + backlogName + '.backlog.' + backlogTld + '/api/v2/notifications/' + id + '/markAsRead?apiKey=' + backlogKey, { method: 'POST' }).then(function (result) {\n          resolve(result);\n        });\n      });\n    }\n  }]);\n\n  return Request;\n}())();//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy9kZXYvanMvcmVxdWVzdC5qcz82MmYwIl0sInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBkZWZhdWx0IG5ldyBjbGFzcyBSZXF1ZXN0IHtcbiAgY29uc3RydWN0b3IoKSB7fVxuXG5cbiAgLyoqXG4gICAqIOODkOODg+OCr+ODreOCsOOCueODmuODvOOCueWQjeOBruWPluW+l1xuICAgKiBAcGFyYW0ge3ZvaWR9IHJlc29sdmVcbiAgICovXG4gIGdldEJhY2tsb2dOYW1lKHJlc29sdmUpIHtcbiAgICBjaHJvbWUuc3RvcmFnZS5zeW5jLmdldChbJ2JhY2tsb2dfbmFtZSddLCByZXNvbHZlKTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIOODkOODg+OCr+ODreOCsOOCueODmuODvOOCueWQjeOBruOCu+ODg+ODiFxuICAgKiBAcGFyYW0ge3N0cmluZ30gbmFtZVxuICAgKiBAcGFyYW0ge3ZvaWR9IHJlc29sdmVcbiAgICovXG4gIHNldEJhY2tsb2dOYW1lKG5hbWUsIHJlc29sdmUpIHtcbiAgICBjaHJvbWUuc3RvcmFnZS5zeW5jLnNldCh7ICdiYWNrbG9nX25hbWUnOiBuYW1lIH0sIHJlc29sdmUobmFtZSkpO1xuICB9XG5cblxuICAvKipcbiAgICog44OI44OD44OX44Os44OZ44Or44OJ44Oh44Kk44Oz44Gu5Y+W5b6XXG4gICAqIEBwYXJhbSB7dm9pZH0gcmVzb2x2ZVxuICAgKi9cbiAgZ2V0QmFja2xvZ1RsZChyZXNvbHZlKSB7XG4gICAgY2hyb21lLnN0b3JhZ2Uuc3luYy5nZXQoWydiYWNrbG9nX3RsZCddLCByZXNvbHZlKTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIOODiOODg+ODl+ODrOODmeODq+ODieODoeOCpOODs+OBruOCu+ODg+ODiFxuICAgKiBAcGFyYW0ge3N0cmluZ30gdGxkXG4gICAqIEBwYXJhbSB7dm9pZH0gcmVzb2x2ZVxuICAgKi9cbiAgc2V0QmFja2xvZ1RsZCh0bGQsIHJlc29sdmUpIHtcbiAgICBjaHJvbWUuc3RvcmFnZS5zeW5jLnNldCh7ICdiYWNrbG9nX3RsZCc6IHRsZCB9LCByZXNvbHZlKHRsZCkpO1xuICB9XG5cblxuICAvKipcbiAgICogQVBJ44Kt44O844Gu5Y+W5b6XXG4gICAqIEBwYXJhbSB7dm9pZH0gcmVzb2x2ZVxuICAgKi9cbiAgZ2V0QmFja2xvZ0tleShyZXNvbHZlKSB7XG4gICAgY2hyb21lLnN0b3JhZ2Uuc3luYy5nZXQoWydiYWNrbG9nX2tleSddLCByZXNvbHZlKTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIEFQSeOCreODvOOBruOCu+ODg+ODiFxuICAgKiBAcGFyYW0ge3N0cmluZ30ga2V5XG4gICAqIEBwYXJhbSB7dm9pZH0gcmVzb2x2ZVxuICAgKi9cbiAgc2V0QmFja2xvZ0tleShrZXksIHJlc29sdmUpIHtcbiAgICBjaHJvbWUuc3RvcmFnZS5zeW5jLnNldCh7ICdiYWNrbG9nX2tleSc6IGtleSB9LCByZXNvbHZlKGtleSkpO1xuICB9XG5cblxuICAvKipcbiAgICog6YCa55+l56eS5pWw44Gu5Y+W5b6XXG4gICAqIEBwYXJhbSB7dm9pZH0gcmVzb2x2ZVxuICAgKi9cbiAgZ2V0Tm90aWZpY2F0aW9uU2Vjb25kcyhyZXNvbHZlKSB7XG4gICAgY2hyb21lLnN0b3JhZ2Uuc3luYy5nZXQoWydub3RpZmljYXRpb25fc2Vjb25kcyddLCByZXNvbHZlKTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIOmAmuefpeenkuaVsOOBruOCu+ODg+ODiFxuICAgKiBAcGFyYW0ge251bWJlcn0gc2Vjb25kc1xuICAgKiBAcGFyYW0ge3ZvaWR9IHJlc29sdmVcbiAgICovXG4gIHNldE5vdGlmaWNhdGlvblNlY29uZHMoc2Vjb25kcywgcmVzb2x2ZSkge1xuICAgIGNocm9tZS5zdG9yYWdlLnN5bmMuc2V0KHsgJ25vdGlmaWNhdGlvbl9zZWNvbmRzJzogc2Vjb25kcyB9LCByZXNvbHZlKHNlY29uZHMpKTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIFN0b3JhZ2XjgYvjgonjgYrnn6XjgonjgZvku7bmlbDjga7lj5blvpdcbiAgICogQHBhcmFtIHt2b2lkfSByZXNvbHZlXG4gICAqL1xuICBnZXROb3RpZmljYXRpb25Db3VudHMocmVzb2x2ZSkge1xuICAgIGNocm9tZS5zdG9yYWdlLnN5bmMuZ2V0KFsnY291bnQnXSwgcmVzb2x2ZSk7XG4gIH1cblxuXG4gIC8qKlxuICAgKiBTdG9yYWdl44Gr44GK55+l44KJ44Gb5Lu25pWw44Gu44K744OD44OIXG4gICAqIEBwYXJhbSB7bnVtYmVyfSBzaXplXG4gICAqIEBwYXJhbSB7dm9pZH0gcmVzb2x2ZVxuICAgKi9cbiAgc2V0Tm90aWZpY2F0aW9uQ291bnRzKHNpemUsIHJlc29sdmUpIHtcbiAgICBjaHJvbWUuc3RvcmFnZS5zeW5jLnNldCh7ICdjb3VudCc6IHNpemUgfSwgcmVzb2x2ZShzaXplKSk7XG4gIH1cblxuXG4gIC8qKlxuICAgKiDjg6rjg57jgqTjg7Pjg4nlr77osaHnr4Tlm7Ljga7lj5blvpdcbiAgICogQHBhcmFtIHt2b2lkfSByZXNvbHZlXG4gICAqL1xuICBnZXRSZW1pbmRTY29wZShyZXNvbHZlKSB7XG4gICAgY2hyb21lLnN0b3JhZ2Uuc3luYy5nZXQoWydyZW1pbmRfc2NvcGUnXSwgcmVzb2x2ZSk7XG4gIH1cblxuXG4gIC8qKlxuICAgKiDjg6rjg57jgqTjg7Pjg4nlr77osaHnr4Tlm7Ljga7jgrvjg4Pjg4hcbiAgICogQHBhcmFtIHtvYmplY3R9IGRhdGFcbiAgICogQHBhcmFtIHt2b2lkfSByZXNvbHZlXG4gICAqL1xuICBzZXRSZW1pbmRTY29wZShkYXRhLCByZXNvbHZlKSB7XG4gICAgY2hyb21lLnN0b3JhZ2Uuc3luYy5zZXQoeyAncmVtaW5kX3Njb3BlJzogZGF0YSB9LCByZXNvbHZlKGRhdGEpKTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIOODquODnuOCpOODs+ODieOBruOCv+OCpOODn+ODs+OCsOWPluW+l1xuICAgKiBAcGFyYW0ge3ZvaWR9IHJlc29sdmVcbiAgICovXG4gIGdldFJlbWluZFRpbWluZyhyZXNvbHZlKSB7XG4gICAgY2hyb21lLnN0b3JhZ2Uuc3luYy5nZXQoWydyZW1pbmRfdGltaW5nJ10sIHJlc29sdmUpO1xuICB9XG5cblxuICAvKipcbiAgICog44Oq44Oe44Kk44Oz44OJ44Gu44K/44Kk44Of44Oz44Kw44Gu44K744OD44OIXG4gICAqIEBwYXJhbSB7b2JqZWN0fSBkYXRlXG4gICAqIEBwYXJhbSB7dm9pZH0gcmVzb2x2ZVxuICAgKi9cbiAgc2V0UmVtaW5kVGltaW5nKGRhdGUsIHJlc29sdmUpIHtcbiAgICBjaHJvbWUuc3RvcmFnZS5zeW5jLnNldCh7ICdyZW1pbmRfdGltaW5nJzogZGF0ZSB9LCByZXNvbHZlKGRhdGUpKTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIOiHquWIhuOBrklE5Y+W5b6XXG4gICAqIEBwYXJhbSB7dm9pZH0gcmVzb2x2ZVxuICAgKi9cbiAgZ2V0TXlJZChyZXNvbHZlKSB7XG4gICAgY2hyb21lLnN0b3JhZ2Uuc3luYy5nZXQoWydteV9pZCddLCByZXNvbHZlKTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIOiHquWIhuOBrklE44Gu44K744OD44OIXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBpZFxuICAgKiBAcGFyYW0ge3ZvaWR9IHJlc29sdmVcbiAgICovXG4gIHNldE15SWQoaWQsIHJlc29sdmUpIHtcbiAgICBjaHJvbWUuc3RvcmFnZS5zeW5jLnNldCh7ICdteV9pZCc6IGlkIH0sIHJlc29sdmUoaWQpKTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIOODkOODg+OCr+ODreOCsEFQSTog6KqN6Ki844Om44O844K244O85oOF5aCx44Gu5Y+W5b6XXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBiYWNrbG9nTmFtZSAtIOODkOODg+OCr+ODreOCsOOCueODmuODvOOCueWQjVxuICAgKiBAcGFyYW0ge3N0cmluZ30gYmFja2xvZ1RsZCAtIOODkOODg+OCr+ODreOCsOOBruODiOODg+ODl+ODrOODmeODq+ODieODoeOCpOODs1xuICAgKiBAcGFyYW0ge3N0cmluZ30gYmFja2xvZ0tleSAtIOODkOODg+OCr+ODreOCsOOBrkFQSeOCreODvFxuICAgKiBAcmV0dXJuIHtQcm9taXNlPGpzb24+fVxuICAgKi9cbiAgcmVxdWVzdE15c2VsZihiYWNrbG9nTmFtZSwgYmFja2xvZ1RsZCwgYmFja2xvZ0tleSkge1xuICAgIHJldHVybiBuZXcgUHJvbWlzZSgocmVzb2x2ZSkgPT4ge1xuICAgICAgZmV0Y2goYGh0dHBzOi8vJHsgYmFja2xvZ05hbWUgfS5iYWNrbG9nLiR7IGJhY2tsb2dUbGQgfS9hcGkvdjIvdXNlcnMvbXlzZWxmP2FwaUtleT0keyBiYWNrbG9nS2V5IH1gKS50aGVuKChyZXN1bHQpID0+IHtcbiAgICAgICAgcmVzb2x2ZShyZXN1bHQuanNvbigpKTtcbiAgICAgIH0pO1xuICAgIH0pO1xuICB9XG5cblxuICAvKipcbiAgICog44OQ44OD44Kv44Ot44KwQVBJOiDjg5fjg63jgrjjgqfjgq/jg4jmg4XloLHjga7lj5blvpdcbiAgICogQHBhcmFtIHtzdHJpbmd9IGJhY2tsb2dOYW1lIC0g44OQ44OD44Kv44Ot44Kw44K544Oa44O844K55ZCNXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBiYWNrbG9nVGxkIC0g44OQ44OD44Kv44Ot44Kw44Gu44OI44OD44OX44Os44OZ44Or44OJ44Oh44Kk44OzXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBiYWNrbG9nS2V5IC0g44OQ44OD44Kv44Ot44Kw44GuQVBJ44Kt44O8XG4gICAqIEByZXR1cm4ge1Byb21pc2U8anNvbj59XG4gICAqL1xuICByZXF1ZXN0UHJvamVjdHMoYmFja2xvZ05hbWUsIGJhY2tsb2dUbGQsIGJhY2tsb2dLZXkpIHtcbiAgICByZXR1cm4gbmV3IFByb21pc2UoKHJlc29sdmUpID0+IHtcbiAgICAgIGZldGNoKGBodHRwczovLyR7IGJhY2tsb2dOYW1lIH0uYmFja2xvZy4keyBiYWNrbG9nVGxkIH0vYXBpL3YyL3Byb2plY3RzP2FwaUtleT0keyBiYWNrbG9nS2V5IH1gKS50aGVuKChyZXN1bHQpID0+IHtcbiAgICAgICAgcmVzb2x2ZShyZXN1bHQuanNvbigpKTtcbiAgICAgIH0pO1xuICAgIH0pO1xuICB9XG5cblxuICAvKipcbiAgICog44GK55+l44KJ44Gb5Lu25pWw44Gu5Y+W5b6XXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBiYWNrbG9nTmFtZSAtIOODkOODg+OCr+ODreOCsOOCueODmuODvOOCueWQjVxuICAgKiBAcGFyYW0ge3N0cmluZ30gYmFja2xvZ1RsZCAtIOODkOODg+OCr+ODreOCsOOBruODiOODg+ODl+ODrOODmeODq+ODieODoeOCpOODs1xuICAgKiBAcGFyYW0ge3N0cmluZ30gYmFja2xvZ0tleSAtIOODkOODg+OCr+ODreOCsOOBrkFQSeOCreODvFxuICAgKiBAcmV0dXJuIHtQcm9taXNlPGpzb24+fVxuICAgKi9cbiAgcmVxdWVzdENvdW50cyhiYWNrbG9nTmFtZSwgYmFja2xvZ1RsZCwgYmFja2xvZ0tleSkge1xuICAgIHJldHVybiBuZXcgUHJvbWlzZSgocmVzb2x2ZSkgPT4ge1xuICAgICAgZmV0Y2goYGh0dHBzOi8vJHsgYmFja2xvZ05hbWUgfS5iYWNrbG9nLiR7IGJhY2tsb2dUbGQgfS9hcGkvdjIvbm90aWZpY2F0aW9ucy9jb3VudD9hcGlLZXk9JHsgYmFja2xvZ0tleSB9YCkudGhlbigocmVzdWx0KSA9PiB7XG4gICAgICAgIHJlc29sdmUocmVzdWx0Lmpzb24oKSk7XG4gICAgICB9KTtcbiAgICB9KTtcbiAgfVxuXG5cbiAgLyoqXG4gICAqIOacgOaWsOOBruOCs+ODoeODs+ODiOOCkuWPluW+l1xuICAgKiBAcGFyYW0ge3N0cmluZ30gYmFja2xvZ05hbWUgLSDjg5Djg4Pjgq/jg63jgrDjgrnjg5rjg7zjgrnlkI1cbiAgICogQHBhcmFtIHtzdHJpbmd9IGJhY2tsb2dUbGQgLSDjg5Djg4Pjgq/jg63jgrDjga7jg4jjg4Pjg5fjg6zjg5njg6vjg4njg6HjgqTjg7NcbiAgICogQHBhcmFtIHtzdHJpbmd9IGJhY2tsb2dLZXkgLSDjg5Djg4Pjgq/jg63jgrDjga5BUEnjgq3jg7xcbiAgICogQHJldHVybiB7UHJvbWlzZTxqc29uPn1cbiAgICovXG4gIHJlcXVlc3RMYXRlc3RDb21tZW50KGJhY2tsb2dOYW1lLCBiYWNrbG9nVGxkLCBiYWNrbG9nS2V5KSB7XG4gICAgcmV0dXJuIG5ldyBQcm9taXNlKChyZXNvbHZlKSA9PiB7XG4gICAgICBmZXRjaChgaHR0cHM6Ly8keyBiYWNrbG9nTmFtZSB9LmJhY2tsb2cuJHsgYmFja2xvZ1RsZCB9L2FwaS92Mi9ub3RpZmljYXRpb25zP2FwaUtleT0keyBiYWNrbG9nS2V5IH0mY291bnQ9MWApLnRoZW4oKHJlc3VsdCkgPT4ge1xuICAgICAgICByZXNvbHZlKHJlc3VsdC5qc29uKCkpO1xuICAgICAgfSk7XG4gICAgfSk7XG4gIH1cblxuXG4gIC8qKlxuICAgKiDjgYrnn6XjgonjgZvjga7ml6Loqq3ljJZcbiAgICogQHBhcmFtIHtzdHJpbmd9IGJhY2tsb2dOYW1lIC0g44OQ44OD44Kv44Ot44Kw44K544Oa44O844K55ZCNXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBiYWNrbG9nVGxkIC0g44OQ44OD44Kv44Ot44Kw44Gu44OI44OD44OX44Os44OZ44Or44OJ44Oh44Kk44OzXG4gICAqIEBwYXJhbSB7c3RyaW5nfSBiYWNrbG9nS2V5IC0g44OQ44OD44Kv44Ot44Kw44GuQVBJ44Kt44O8XG4gICAqIEBwYXJhbSB7c3RyaW5nfSBpZCAtIOOBiuefpeOCieOBm0lEXG4gICAqIEByZXR1cm4ge1Byb21pc2U8anNvbj59XG4gICAqL1xuICBzZW5kTm90aWZpY2F0aW9uUmVhZChiYWNrbG9nTmFtZSwgYmFja2xvZ1RsZCwgYmFja2xvZ0tleSwgaWQpIHtcbiAgICByZXR1cm4gbmV3IFByb21pc2UoKHJlc29sdmUpID0+IHtcbiAgICAgIGZldGNoKGBodHRwczovLyR7IGJhY2tsb2dOYW1lIH0uYmFja2xvZy4keyBiYWNrbG9nVGxkIH0vYXBpL3YyL25vdGlmaWNhdGlvbnMvJHsgaWQgfS9tYXJrQXNSZWFkP2FwaUtleT0keyBiYWNrbG9nS2V5IH1gLCB7IG1ldGhvZDogJ1BPU1QnIH0pLnRoZW4oKHJlc3VsdCkgPT4ge1xuICAgICAgICByZXNvbHZlKHJlc3VsdCk7XG4gICAgICB9KTtcbiAgICB9KTtcbiAgfVxufVxuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIGRldi9qcy9yZXF1ZXN0LmpzIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7O0FBQUE7QUFDQTtBQUFBO0FBQUE7QUFDQTtBQUVBOzs7Ozs7QUFKQTtBQUFBO0FBQUE7QUFTQTtBQUNBO0FBQ0E7QUFFQTs7Ozs7O0FBYkE7QUFBQTtBQUFBO0FBbUJBO0FBQ0E7QUFDQTtBQUVBOzs7OztBQXZCQTtBQUFBO0FBQUE7QUE0QkE7QUFDQTtBQUNBO0FBRUE7Ozs7OztBQWhDQTtBQUFBO0FBQUE7QUFzQ0E7QUFDQTtBQUNBO0FBRUE7Ozs7O0FBMUNBO0FBQUE7QUFBQTtBQStDQTtBQUNBO0FBQ0E7QUFFQTs7Ozs7O0FBbkRBO0FBQUE7QUFBQTtBQXlEQTtBQUNBO0FBQ0E7QUFFQTs7Ozs7QUE3REE7QUFBQTtBQUFBO0FBa0VBO0FBQ0E7QUFDQTtBQUVBOzs7Ozs7QUF0RUE7QUFBQTtBQUFBO0FBNEVBO0FBQ0E7QUFDQTtBQUVBOzs7OztBQWhGQTtBQUFBO0FBQUE7QUFxRkE7QUFDQTtBQUNBO0FBRUE7Ozs7OztBQXpGQTtBQUFBO0FBQUE7QUErRkE7QUFDQTtBQUNBO0FBRUE7Ozs7O0FBbkdBO0FBQUE7QUFBQTtBQXdHQTtBQUNBO0FBQ0E7QUFFQTs7Ozs7O0FBNUdBO0FBQUE7QUFBQTtBQWtIQTtBQUNBO0FBQ0E7QUFFQTs7Ozs7QUF0SEE7QUFBQTtBQUFBO0FBMkhBO0FBQ0E7QUFDQTtBQUVBOzs7Ozs7QUEvSEE7QUFBQTtBQUFBO0FBcUlBO0FBQ0E7QUFDQTtBQUVBOzs7OztBQXpJQTtBQUFBO0FBQUE7QUE4SUE7QUFDQTtBQUNBO0FBRUE7Ozs7OztBQWxKQTtBQUFBO0FBQUE7QUF3SkE7QUFDQTtBQUNBO0FBRUE7Ozs7Ozs7O0FBNUpBO0FBQUE7QUFBQTtBQW9LQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUVBOzs7Ozs7OztBQTVLQTtBQUFBO0FBQUE7QUFvTEE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFFQTs7Ozs7Ozs7QUE1TEE7QUFBQTtBQUFBO0FBb01BO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBRUE7Ozs7Ozs7O0FBNU1BO0FBQUE7QUFBQTtBQW9OQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUVBOzs7Ozs7Ozs7QUE1TkE7QUFBQTtBQUFBO0FBcU9BO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQTFPQTtBQUNBO0FBREE7QUFBQSIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///3\n");
 
-
-
-(($, chrome) => {
-  /**
-   * お知らせを取得して変更があれば通知する
-   */
-  class BacklogNotification {
-    constructor(name, tld, key, seconds, count) {
-      this.name = name;
-      this.tld = tld;
-      this.key = key;
-      this.count = count;
-      this.seconds = seconds;
-      this.domain = `https://${this.name}.backlog.${this.tld}/`;
-      this.url = `${this.domain}api/v2/`;
-      this.requestBacklog = new RequestBacklogApi(name, tld, key);
-
-      this.init();
-    }
-
-    get notificationCount() {
-      return this.count;
-    }
-    set notificationCount(value) {
-      if (this.count === value) {
-        return;
-      }
-      this.count = value;
-      chrome.storage.sync.set({'count': value}, () => {});
-      this.createNotification();
-    }
-
-    /**
-     * 初期処理
-     */
-    init() {
-      this.requestBacklog.requestCounts()
-        .then((payload) => {
-          console.log(payload.count);
-          this.notificationCount = payload.count;
-        });
-
-      chrome.alarms.create('BACKLOG_NOTIFICATION', {periodInMinutes: 1});
-      chrome.alarms.onAlarm.addListener((alarm) => {
-        if (alarm.name === 'BACKLOG_NOTIFICATION') {
-          this.requestBacklog.requestCounts()
-            .then((payload) => {
-              console.log(payload.count);
-              this.notificationCount = payload.count;
-            });
-        }
-      });
-    }
-
-
-    /**
-     * 通知の作成
-     */
-    createNotification() {
-      const id = Math.floor(Math.random() * 9007199254740992) + 1;
-      this.requestBacklog.requestLatestComment()
-        .then((payload) => {
-          const data = {
-            title: `[${payload[0].issue.issueKey}] ${payload[0].issue.summary}`,
-            message: payload[0].comment.content,
-            contextMessage: payload[0].comment.createdUser.name,
-            url: `${this.domain}view/${payload[0].issue.issueKey}`
-          };
-
-          if (payload[0].comment.content) {
-            data.url += `#comment-${payload[0].comment.id}`;
-          }
-
-          chrome.notifications.create(`backlogNotification_${this.key}_${id}`, {
-            type: 'basic',
-            iconUrl: `https://${this.name}.backlog.${this.tld}/favicon.ico`,
-            title: data.title,
-            message: data.message,
-            contextMessage: data.contextMessage,
-            priority: 1
-          }, (notificationId) => {
-            const listener = () => {
-              this.requestBacklog.sendNotificationRead(payload[0].id)
-                .then((result) => {
-                  console.log(result);
-                });
-              chrome.tabs.create({
-                url: data.url
-              });
-              chrome.notifications.onClicked.removeListener(listener);
-              chrome.notifications.clear(notificationId);
-            };
-
-            chrome.notifications.onClicked.addListener(listener);
-            chrome.notifications.onClosed.addListener(() => {
-              chrome.notifications.onClicked.removeListener(listener);
-              chrome.notifications.clear(notificationId);
-            });
-            this.closeNotification(notificationId, listener);
-          });
-        });
-    }
-
-    /**
-     * デスクトップ通知の自動クローズ
-     */
-    closeNotification(notificationId, listener) {
-      if (this.seconds === 'not') {
-        return;
-      }
-      chrome.alarms.create('autoClose', {
-        when: Date.now() + (Number(this.seconds) * 1000)
-      })
-      chrome.alarms.onAlarm.addListener((alarm) => {
-        if (alarm && alarm.name === 'autoClose') {
-          chrome.notifications.onClicked.removeListener(listener);
-          chrome.notifications.clear(notificationId);
-        }
-      });
-    }
-  }
-
-  chrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notification_seconds', 'count'], (value) => {
-    const data = value;
-
-    // KEYがなければ終了
-    if (!data.backlog_name || !data.backlog_tld || !data.backlog_key) {
-      return;
-    }
-
-    new BacklogNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds, data.count);
-  });
-
-  chrome.runtime.onInstalled.addListener((details) => {
-    if (details.reason !== 'install') {
-      return;
-    }
-    if (chrome.runtime.openOptionsPage) {
-      chrome.runtime.openOptionsPage();
-    } else {
-      window.open(chrome.runtime.getURL('options.html'));
-    }
-  });
-
-  chrome.notifications.getPermissionLevel((res) => {
-    chrome.storage.onChanged.addListener((changes) => {
-      if ('count' in changes) {
-        return;
-      }
-
-      chrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notification_seconds', 'count'], (value) => {
-        const data = value;
-
-        // KEYがなければ終了
-        if (!data.backlog_name || !data.backlog_tld || !data.backlog_key) {
-          return;
-        }
-
-        new BacklogNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds, data.count);
-      });
-    });
-  });
-})(window.jQuery, window.chrome);
+/***/ })
+/******/ ]);
