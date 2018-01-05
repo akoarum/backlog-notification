@@ -8,78 +8,7 @@
   <link rel="stylesheet" href="./css/options.css">
 </head>
 <body>
-  <div class="l-container">
-    <header class="l-header" role="banner">
-      <div class="l-header__inner">
-        <h1 class="l-header__title">Backlog Notification</h1>
-      </div><!-- /.l-header__inner -->
-    </header><!-- /.l-header -->
-
-    <main class="l-main" role="main">
-      <section class="c-sec">
-        <div class="c-sec__inner">
-          <h2 class="c-sec__title">スペース情報</h2>
-          <div class="c-sec__content" id="fn-options-container">
-            <table class="c-form-tbl">
-              <tbody>
-                <tr>
-                  <th><label for="space_name">スペース名</label></th>
-                  <td>
-                    <input type="text" placeholder="spacename" id="space_name" class="c-form-text -w30">
-                    <p class="c-txt-notice">https://[*].backlog.jp/の [*]の部分を入力してください。</p>
-                  </td>
-                </tr>
-                <tr>
-                  <th><label for="space_tld">トップレベルドメイン</label></th>
-                  <td>
-                    <input type="text" placeholder="jp" id="space_tld" class="c-form-text -w30">
-                    <p class="c-txt-notice">https://xxxx.backlog.[*]/の [*] の部分を入力してください。</p>
-                  </td>
-                </tr>
-                <tr>
-                  <th><label for="space_key">APIキー</label></th>
-                  <td>
-                    <input type="text" placeholder="eXamp1e" id="space_key" class="c-form-text">
-                    <p class="c-txt-notice">バックログの個人設定、APIの設定ページで登録すると発行されます。</p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div><!-- /.c-sec__content -->
-        </div><!-- /.c-sec__inner -->
-      </section><!-- /.c-sec -->
-      <section class="c-sec">
-        <div class="c-sec__inner">
-          <h2 class="c-sec__title">オプション設定</h2>
-          <div class="c-sec__content">
-            <table class="c-form-tbl">
-              <tbody>
-                <tr>
-                  <th><label for="auto_close">表示時間</label></th>
-                  <td>
-                    <label class="c-form-select">
-                      <select id="auto_close" class="c-form-select">
-                        <option value="not">閉じない</option>
-                        <option value="5">5秒</option>
-                        <option value="6">6秒</option>
-                        <option value="7">7秒</option>
-                        <option value="8">8秒</option>
-                        <option value="9">9秒</option>
-                        <option value="10">10秒</option>
-                      </select>
-                    </label>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-      <div class="c-btn-container"><button type="button" class="c-btn" id="fn-options-submit">設定を保存する</button></div>
-    </main><!-- /.l-main -->
-  </div><!-- /.l-container -->
-
-  <script src="./js/lib/jquery.min.js"></script>
+  <div id="app"></div>
   <script src="./js/options.js"></script>
 </body>
 </html>

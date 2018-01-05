@@ -29,6 +29,18 @@
   padding: 46px 0;
 }
 
+.l-footer {
+  margin-top: 39px;
+  text-align: center;
+
+  &__copyright {
+    small {
+      font-size: 1.2rem;
+      color: #888;
+    }
+  }
+}
+
 
 // ==============================================
 // Object
@@ -43,6 +55,10 @@
     font-weight: normal;
     line-height: 1.4;
   }
+
+  & + .c-sec {
+    margin-top: 54px;
+  }
 }
 
 
@@ -50,7 +66,7 @@
 // 完了テキスト
 // ==============================================
 
-.c-txt-completed {
+.c-txt-correct {
   margin: 36px 0;
   border-radius: 4px;
   border: 1px solid #40cfa0;
@@ -91,6 +107,11 @@
     th,
     td {
       padding-top: 19px;
+    }
+  }
+  td {
+    > *:last-child {
+      margin-bottom: 0 !important;
     }
   }
 
@@ -137,7 +158,7 @@
 .c-form-select {
   position: relative;
   display: inline-block;
-  width: 25%;
+  width: 45%;
 
   &::after {
     position: absolute;
@@ -161,9 +182,78 @@
     background: transparent;
     font-size: 1.5rem;
     outline: none;
+    cursor: pointer;
 
     &:focus {
       border-bottom: 1px solid #40cfa0;
+    }
+  }
+
+  & + .c-form-select {
+    margin-left: 8px;
+  }
+  & + .c-form-checkbox {
+    margin-top: 10px;
+  }
+}
+
+
+// ==============================================
+// チェックボックスリスト
+// ==============================================
+
+.c-form-checkbox {
+  font-size: 0;
+  margin: -12px 0 0 -12px;
+
+  &__item {
+    margin: 12px 0 0 12px;
+    display: inline-block;
+    font-size: 1.5rem;
+
+    label {
+      position: relative;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      padding: 6px 14px 6px 32px;
+      background: #fff;
+      transition: background .3s ease;
+
+      &:hover,
+      &:focus {
+        background: #f6f6f6;
+      }
+    }
+    input {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+
+      &:checked + span::before {
+        background: url('/app/img/checkbox-checked.svg') left top no-repeat;
+        background-size: 100% auto;
+      }
+    }
+    span {
+      display: inline-block;
+
+      &::before {
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        content: '';
+        margin-top: -8px;
+        width: 16px;
+        height: 16px;
+        background: url('/app/img/checkbox-unchecked.svg') left top no-repeat;
+        background-size: 100% auto;
+        transition: background .4s ease;
+      }
     }
   }
 }
