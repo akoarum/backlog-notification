@@ -16,9 +16,13 @@
           <FormItem itemId="auto-close" label="通知の表示時間">
             <SelectBox v-model="notificationSeconds" selectId="auto_close" :defaultValue="notificationSeconds" :options="notificationOptions" />
           </FormItem>
+          <FormItem itemId="use-reminder" label="リマインダーの使用">
+            <label class="c-form-switch"><input type="checkbox" v-model="useReminder"><span>リマインダーを使用する</span></label>
+          </FormItem>
         </tbody>
       </table>
       <CorrectMessage v-if="completed">共通設定を登録しました。</CorrectMessage>
+      <ErrorMessage v-if="isError">エラーが発生しました。入力内容を再度ご確認ください。</ErrorMessage>
       <div class="c-btn-container"><button type="button" class="c-btn" @click="submitSetting" :disabled="submitDisabled">共通設定を登録する</button></div>
     </div>
   </section>
@@ -27,13 +31,15 @@
 <script>
 import * as types from '../store/types';
 import CorrectMessage from './CorrectMessage.vue';
+import ErrorMessage from './ErrorMessage.vue';
 import FormItem from './FormItem.vue';
 import SelectBox from './SelectBox.vue';
 
 export default {
-  components: { CorrectMessage, FormItem, SelectBox },
+  components: { CorrectMessage, ErrorMessage, FormItem, SelectBox },
   data() {
     return {
+      isError: false,
       completed: false,
       notificationOptions: [
         { text: '閉じない', value: 'not' },
@@ -73,10 +79,18 @@ export default {
     },
     notificationSeconds: {
       get() {
-        return this.$store.state.notificationSeconds;
+        return this.$store.state.notificationSeconds || 'not';
       },
       set(value) {
         this.$store.commit(types.UPDATE_NOTIFICATION_SECONDS, value);
+      }
+    },
+    useReminder: {
+      get() {
+        return this.$store.state.useReminder;
+      },
+      set(value) {
+        this.$store.commit(types.UPDATE_USE_REMINDER, value);
       }
     },
     submitDisabled() {
@@ -89,7 +103,8 @@ export default {
         this.$store.dispatch(types.SET_BACKLOG_NAME, this.$store.state.backlogName),
         this.$store.dispatch(types.SET_BACKLOG_TLD, this.$store.state.backlogTld),
         this.$store.dispatch(types.SET_BACKLOG_KEY, this.$store.state.backlogKey),
-        this.$store.dispatch(types.SET_NOTIFICATION_SECONDS, this.$store.state.notificationSeconds)
+        this.$store.dispatch(types.SET_NOTIFICATION_SECONDS, this.$store.state.notificationSeconds),
+        this.$store.dispatch(types.SET_USE_REMINDER, this.$store.state.useReminder)
       ];
 
       Promise.all(submit).then(() => {
@@ -100,7 +115,11 @@ export default {
 
         Promise.all(init).then(() => {
           this.completed = true;
+          this.isError = false;
           this.$store.dispatch(types.SET_MYSELF, this.$store.state.myId);
+        }).catch(() => {
+          this.completed = false;
+          this.isError = true;
         });
       });
     }

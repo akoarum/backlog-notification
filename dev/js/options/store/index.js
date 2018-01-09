@@ -21,7 +21,8 @@ const state = {
     hour: 9
   },
   myId: '',
-  projects: []
+  projects: [],
+  useReminder: false
 };
 
 export default new Vuex.Store({

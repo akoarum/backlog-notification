@@ -98,6 +98,7 @@
   td {
     font-size: 1.6rem;
     text-align: left;
+    vertical-align: middle;
   }
   th {
     width: 174px;
@@ -260,14 +261,74 @@
 
 
 // ==============================================
+// ON / OFF チェックボックス
+// ==============================================
+
+.c-form-switch {
+  position: relative;
+  display: block;
+  line-height: 1;
+
+  input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    cursor: pointer;
+    opacity: 0;
+
+    &:checked + span {
+      background: #40cfa0;
+
+      &::before {
+        left: 50px;
+      }
+    }
+  }
+  span {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 88px;
+    height: 32px;
+    background: #f0f0f0;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+    transition: .3s ease background;
+
+    &::before {
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      content: '';
+      box-sizing: border-box;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+      width: 32px;
+      height: 20px;
+      background: #fff;
+      transition: .3s ease left;
+    }
+  }
+}
+
+
+// ==============================================
 // フォームエラーメッセージ
 // ==============================================
 
 .c-form-error {
-  margin-top: 8px;
-  font-size: 1.4rem;
+  margin: 36px 0;
+  border-radius: 4px;
+  border: 1px solid #e83737;
+  padding: 14px 22px;
+  background: #f9f2f2;
+  font-size: 1.5rem;
   line-height: 1;
-  color: #e83737
+  color: #e83737;
 }
 
 

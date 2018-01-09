@@ -7,7 +7,7 @@ export default {
    */
   [types.GET_BACKLOG_NAME](context) {
     return Request.getBacklogName((value) => {
-      this.commit(types.GET_BACKLOG_NAME, value.backlog_name);
+      this.commit(types.GET_BACKLOG_NAME, value.backlog_name || '');
     });
   },
 
@@ -27,7 +27,7 @@ export default {
    */
   [types.GET_BACKLOG_TLD](context) {
     return Request.getBacklogTld((value) => {
-      this.commit(types.GET_BACKLOG_TLD, value.backlog_tld);
+      this.commit(types.GET_BACKLOG_TLD, value.backlog_tld || '');
     });
   },
 
@@ -47,7 +47,7 @@ export default {
    */
   [types.GET_BACKLOG_KEY](context) {
     return Request.getBacklogKey((value) => {
-      this.commit(types.GET_BACKLOG_KEY, value.backlog_key);
+      this.commit(types.GET_BACKLOG_KEY, value.backlog_key || '');
     });
   },
 
@@ -67,7 +67,7 @@ export default {
    */
   [types.GET_NOTIFICATION_SECONDS](context) {
     return Request.getNotificationSeconds((value) => {
-      this.commit(types.GET_NOTIFICATION_SECONDS, value.notification_seconds);
+      this.commit(types.GET_NOTIFICATION_SECONDS, value.notification_seconds || 'not');
     });
   },
 
@@ -78,6 +78,26 @@ export default {
   [types.SET_NOTIFICATION_SECONDS](context, value) {
     return Request.setNotificationSeconds(value, (result) => {
       this.commit(types.SET_NOTIFICATION_SECONDS, result);
+    });
+  },
+
+
+  /**
+   * リマインダーの使用有無の取得
+   */
+  [types.GET_USE_REMINDER](context) {
+    return Request.getUseReminder((result) => {
+      this.commit(types.GET_USE_REMINDER, result.use_reminder || false);
+    });
+  },
+
+
+  /**
+   * リマインダーの使用有無のセット
+   */
+  [types.SET_USE_REMINDER](context, value) {
+    return Request.setUseReminder(value, (result) => {
+      this.commit(types.SET_USE_REMINDER, result);
     });
   },
 

@@ -98,6 +98,24 @@ export default new class Request {
 
 
   /**
+   * リマインダーの使用有無の取得
+   * @param {void} resolve
+   */
+  getUseReminder(resolve) {
+    chrome.storage.sync.get(['use_reminder'], resolve);
+  }
+
+
+  /**
+   * リマインダーの使用有無のセット
+   * @param {boolean} value
+   * @param {void} resolve
+   */
+  setUseReminder(value, resolve) {
+    chrome.storage.sync.set({ 'use_reminder': value }, resolve(value));
+  }
+
+  /**
    * リマインド対象範囲の取得
    * @param {void} resolve
    */
@@ -162,8 +180,12 @@ export default new class Request {
    * @return {Promise<json>}
    */
   requestMyself(backlogName, backlogTld, backlogKey) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       fetch(`https://${ backlogName }.backlog.${ backlogTld }/api/v2/users/myself?apiKey=${ backlogKey }`).then((result) => {
+        if (result.status !== 200) {
+          reject();
+          return;
+        }
         resolve(result.json());
       });
     });

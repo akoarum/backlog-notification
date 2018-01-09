@@ -3,7 +3,9 @@ import DesktopNotification from './DesktopNotification';
 import NewsNotification from './NewsNotification';
 import RemindNotification from './RemindNotification';
 
-chrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notification_seconds', 'count'], (value) => {
+let news, remind;
+
+chrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notification_seconds', 'count', 'use_reminder'], (value) => {
   const data = value;
 
   // KEYがなければ終了
@@ -11,10 +13,14 @@ chrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notifica
     return;
   }
 
-  new NewsNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds, data.count);
-  new RemindNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds);
+  news = new NewsNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds, data.count);
+  if (data.use_reminder) {
+    remind = new RemindNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds);
+  }
 });
 
+
+// インストール時のイベントリスナの指定
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason !== 'install') {
     return;
@@ -26,13 +32,15 @@ chrome.runtime.onInstalled.addListener((details) => {
   }
 });
 
+
+// オプションがアップデートされた場合に再度実行する
 chrome.notifications.getPermissionLevel((res) => {
   chrome.storage.onChanged.addListener((changes) => {
     if ('count' in changes) {
       return;
     }
 
-    chrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notification_seconds', 'count'], (value) => {
+    chrome.storage.sync.get(['backlog_name', 'backlog_tld', 'backlog_key', 'notification_seconds', 'count', 'use_reminder'], (value) => {
       const data = value;
 
       // KEYがなければ終了
@@ -40,8 +48,13 @@ chrome.notifications.getPermissionLevel((res) => {
         return;
       }
 
-      new NewsNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds, data.count);
-      new RemindNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds);
+      if (!news) {
+        news = new NewsNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds, data.count);
+      }
+
+      if (!remind && data.use_reminder) {
+        remind = new RemindNotification(data.backlog_name, data.backlog_tld, data.backlog_key, data.notification_seconds);
+      }
     });
   });
 });

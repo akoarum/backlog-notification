@@ -66,6 +66,22 @@ export default {
 
 
   /**
+   * リマインダーの使用有無の取得
+   */
+  [types.GET_USE_REMINDER](state, payload) {
+    state.useReminder = payload;
+  },
+
+
+  /**
+   * リマインダーの使用有無のセット
+   */
+  [types.SET_USE_REMINDER](state, payload) {
+    state.useReminder = payload;
+  },
+
+
+  /**
    * バックログのマイIDのセット
    */
   [types.SET_MYSELF](state, payload) {
@@ -160,6 +176,14 @@ export default {
    */
   [types.UPDATE_NOTIFICATION_SECONDS](state, payload) {
     state.notificationSeconds = payload;
+  },
+
+
+  /**
+   * リマインダーの使用有無の更新
+   */
+  [types.UPDATE_USE_REMINDER](state, payload) {
+    state.useReminder = payload;
   },
 
 

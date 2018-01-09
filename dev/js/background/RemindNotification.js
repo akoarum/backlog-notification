@@ -101,8 +101,10 @@ export default class RemindNotification {
     if (this.scope.type === 'projects') {
       query.projectId = this.scope.projects;
     } else {
-      query.assigneeId = this.myId;
+      query['assigneeId[]'] = this.myId;
     }
+
+    query['statusId'] = [1, 2, 3];
 
     Request.requestIssues(this.name, this.tld, this.key, query).then((result) => {
       let data = {};
