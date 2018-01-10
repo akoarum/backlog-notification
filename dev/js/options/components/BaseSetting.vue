@@ -5,13 +5,16 @@
       <table class="c-form-tbl">
         <tbody>
           <FormItem itemId="backlog-name" label="バックログスペース名">
-            <input type="text" v-model="backlogName" id="backlog-name" class="c-form-text" />
+            <input type="text" v-model="backlogName" id="backlog-name" class="c-form-text" aria-describedby="backlog-space-notice" />
+            <Notice noticeId="backlog-space-notice">バックログURLの「https://◯◯.backlog.jp|com」の「◯◯」の部分です。</Notice>
           </FormItem>
           <FormItem itemId="backlog-tld" label="トップレベルドメイン">
-            <input type="text" v-model="backlogTld" id="backlog-tld" class="c-form-text" />
+            <input type="text" v-model="backlogTld" id="backlog-tld" class="c-form-text" aria-describedby="backlog-tld-notice" />
+            <Notice noticeId="backlog-tld-notice">バックログのトップレベルドメインを指定してください。jp / comなどです。</Notice>
           </FormItem>
           <FormItem itemId="backlog-api" label="APIキー">
-            <input type="text" v-model="backlogKey" id="backlog-api" class="c-form-text" />
+            <input type="text" v-model="backlogKey" id="backlog-api" class="c-form-text" aria-describedby="backlog-key-notice" />
+            <Notice noticeId="backlog-key-notice">バックログの個人設定「API」で生成・取得したものを入力してください。</Notice>
           </FormItem>
           <FormItem itemId="auto-close" label="通知の表示時間">
             <SelectBox v-model="notificationSeconds" selectId="auto-close" :defaultValue="notificationSeconds" :options="notificationOptions" />
@@ -36,12 +39,13 @@ import { mapState } from 'vuex';
 import * as types from '../store/types';
 import CorrectMessage from './CorrectMessage.vue';
 import ErrorMessage from './ErrorMessage.vue';
+import Notice from './Notice.vue';
 import FormItem from './FormItem.vue';
 import SelectBox from './SelectBox.vue';
 import Reminder from './Reminder.vue';
 
 export default {
-  components: { CorrectMessage, ErrorMessage, FormItem, SelectBox, Reminder },
+  components: { CorrectMessage, ErrorMessage, Notice, FormItem, SelectBox, Reminder },
   data() {
     return {
       isError: false,
