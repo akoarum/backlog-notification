@@ -3,7 +3,6 @@
     <PageHeader />
     <main class="l-main" role="main">
       <BaseSetting />
-      <Reminder v-if="useReminder" />
     </main>
     <PageFooter />
   </div>
@@ -15,10 +14,9 @@ import * as types from './store/types';
 import PageHeader from './components/PageHeader.vue';
 import PageFooter from './components/PageFooter.vue';
 import BaseSetting from './components/BaseSetting.vue';
-import Reminder from './components/Reminder.vue';
 
 export default {
-  components: { PageHeader, PageFooter, BaseSetting, Reminder },
+  components: { PageHeader, PageFooter, BaseSetting },
   created() {
     this.$store.dispatch(types.GET_BACKLOG_NAME);
     this.$store.dispatch(types.GET_BACKLOG_TLD);
@@ -27,13 +25,6 @@ export default {
     this.$store.dispatch(types.GET_USE_REMINDER);
     this.$store.dispatch(types.GET_REMIND_SCOPE);
     this.$store.dispatch(types.GET_REMIND_TIMING);
-  },
-  computed: {
-    ...mapState({
-      useReminder: (state) => {
-        return state.useReminder;
-      }
-    })
   }
 };
 </script>

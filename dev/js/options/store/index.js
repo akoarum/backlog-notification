@@ -22,7 +22,8 @@ const state = {
   },
   myId: '',
   projects: [],
-  useReminder: false
+  useReminder: false,
+  hasError: false
 };
 
 export default new Vuex.Store({

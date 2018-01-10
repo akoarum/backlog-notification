@@ -200,8 +200,12 @@ export default new class Request {
    * @return {Promise<json>}
    */
   requestProjects(backlogName, backlogTld, backlogKey) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       fetch(`https://${ backlogName }.backlog.${ backlogTld }/api/v2/projects?apiKey=${ backlogKey }`).then((result) => {
+        if (result.status !== 200) {
+          reject();
+          return;
+        }
         resolve(result.json());
       });
     });

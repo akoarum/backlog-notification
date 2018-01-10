@@ -46,7 +46,6 @@ export default class NewsNotification {
     chrome.alarms.onAlarm.addListener((alarm) => {
       if (alarm.name === 'BACKLOG_NOTIFICATION_NEWS') {
         Request.requestCounts(this.name, this.tld, this.key).then((payload) => {
-          console.log(payload.count);
           this.notificationCount = payload.count;
         });
       }

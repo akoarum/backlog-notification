@@ -1,6 +1,6 @@
 <template>
   <section class="c-sec">
-    <h2 class="c-sec__title">共通設定</h2>
+    <h2 class="c-sec__title">設定</h2>
     <div class="c-sec__content">
       <table class="c-form-tbl">
         <tbody>
@@ -14,29 +14,34 @@
             <input type="text" v-model="backlogKey" id="backlog-api" class="c-form-text" />
           </FormItem>
           <FormItem itemId="auto-close" label="通知の表示時間">
-            <SelectBox v-model="notificationSeconds" selectId="auto_close" :defaultValue="notificationSeconds" :options="notificationOptions" />
+            <SelectBox v-model="notificationSeconds" selectId="auto-close" :defaultValue="notificationSeconds" :options="notificationOptions" />
           </FormItem>
           <FormItem itemId="use-reminder" label="リマインダーの使用">
             <label class="c-form-switch"><input type="checkbox" v-model="useReminder"><span>リマインダーを使用する</span></label>
+            <transition name="reminder">
+              <Reminder v-if="useReminder" />
+            </transition>
           </FormItem>
         </tbody>
       </table>
       <CorrectMessage v-if="completed">共通設定を登録しました。</CorrectMessage>
       <ErrorMessage v-if="isError">エラーが発生しました。入力内容を再度ご確認ください。</ErrorMessage>
-      <div class="c-btn-container"><button type="button" class="c-btn" @click="submitSetting" :disabled="submitDisabled">共通設定を登録する</button></div>
+      <div class="c-btn-container"><button type="button" class="c-btn" @click="submitSetting" :disabled="submitDisabled">設定を登録する</button></div>
     </div>
   </section>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import * as types from '../store/types';
 import CorrectMessage from './CorrectMessage.vue';
 import ErrorMessage from './ErrorMessage.vue';
 import FormItem from './FormItem.vue';
 import SelectBox from './SelectBox.vue';
+import Reminder from './Reminder.vue';
 
 export default {
-  components: { CorrectMessage, ErrorMessage, FormItem, SelectBox },
+  components: { CorrectMessage, ErrorMessage, FormItem, SelectBox, Reminder },
   data() {
     return {
       isError: false,
@@ -48,7 +53,7 @@ export default {
         { text: '7秒', value: 7 },
         { text: '8秒', value: 8 },
         { text: '9秒', value: 9 },
-        { text: '10秒', value: 10 },
+        { text: '10秒', value: 10 }
       ]
     };
   },
@@ -93,8 +98,16 @@ export default {
         this.$store.commit(types.UPDATE_USE_REMINDER, value);
       }
     },
+    hasError: {
+      get() {
+        return this.$store.state.hasError;
+      },
+      set(value) {
+        this.$store.commit(types.UPDATE_HAS_ERROR, value);
+      }
+    },
     submitDisabled() {
-      return !(this.$store.state.backlogName && this.$store.state.backlogTld && this.$store.state.backlogKey);
+      return !(this.backlogName && this.backlogTld && this.backlogKey && !this.hasError);
     }
   },
   methods: {
@@ -106,6 +119,11 @@ export default {
         this.$store.dispatch(types.SET_NOTIFICATION_SECONDS, this.$store.state.notificationSeconds),
         this.$store.dispatch(types.SET_USE_REMINDER, this.$store.state.useReminder)
       ];
+
+      if (this.useReminder) {
+        submit.push(this.$store.dispatch(types.SET_REMIND_SCOPE, this.$store.state.remindScope));
+        submit.push(this.$store.dispatch(types.SET_REMIND_TIMING, this.$store.state.remindTiming));
+      }
 
       Promise.all(submit).then(() => {
         const init = [

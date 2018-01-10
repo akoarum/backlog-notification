@@ -32,9 +32,7 @@ export default class DesktopNotification {
       priority: 1
     }, (notificationId) => {
       const listener = () => {
-        Request.sendNotificationRead(this.name, this.tld, this.key, id).then((result) => {
-          console.log(result);
-        });
+        Request.sendNotificationRead(this.name, this.tld, this.key, id).then((result) => {});
         chrome.tabs.create({
           url: url
         });

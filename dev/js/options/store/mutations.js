@@ -216,5 +216,13 @@ export default {
    */
   [types.UPDATE_REMIND_TIMING_HOUR](state, payload) {
     state.remindTiming.hour = payload;
+  },
+
+
+  /**
+   * エラー状態の更新
+   */
+  [types.UPDATE_HAS_ERROR](state, payload) {
+    state.hasError = payload;
   }
 };

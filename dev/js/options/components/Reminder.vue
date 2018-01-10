@@ -1,23 +1,16 @@
 <template>
-  <section class="c-sec">
-    <h2 class="c-sec__title">リマインダー設定</h2>
-    <div class="c-sec__content">
-      <table class="c-form-tbl">
-        <tbody>
-          <FormItem itemId="remind_scope" label="対象範囲">
-            <SelectBox v-model="remindScopeType" selectId="remind_scope" :defaultValue="remindScopeType" :options="scopeType" />
-            <ProjectCheckbox v-if="remindScopeType === 'projects'" />
-          </FormItem>
-          <FormItem itemId="remind_timing" label="タイミング">
-            <SelectBox v-model="remindTimingDate" selectId="remind_timing" :defaultValue="remindTimingDate" :options="timingDate" />
-            <SelectBox v-model="remindTimingHour" :defaultValue="remindTimingHour" :options="timingHour" />
-          </FormItem>
-        </tbody>
-      </table>
-      <CorrectMessage v-if="completed">リマインダー設定を登録しました。</CorrectMessage>
-      <div class="c-btn-container"><button type="button" class="c-btn" @click="submitSetting">リマインダー設定を登録する</button></div>
-    </div>
-  </section>
+  <dl class="c-form-group">
+    <dt class="c-form-group__term"><label for="remind-scope">リマインドする範囲</label></dt>
+    <dd class="c-form-group__def">
+      <SelectBox v-model="remindScopeType" selectId="remind-scope" :defaultValue="remindScopeType" :options="scopeType" />
+      <ProjectCheckbox v-if="remindScopeType === 'projects'" />
+    </dd>
+    <dt class="c-form-group__term"><label for="remind-timing">リマインドのタイミング</label></dt>
+    <dd class="c-form-group__def">
+      <SelectBox v-model="remindTimingDate" selectId="remind-timing" :defaultValue="remindTimingDate" :options="timingDate" />
+      <SelectBox v-model="remindTimingHour" :defaultValue="remindTimingHour" :options="timingHour" />
+    </dd>
+  </dl>
 </template>
 
 <script>
@@ -25,10 +18,9 @@ import * as types from '../store/types';
 import ProjectCheckbox from './ProjectCheckbox.vue';
 import FormItem from './FormItem.vue';
 import SelectBox from './SelectBox.vue';
-import CorrectMessage from './CorrectMessage.vue';
 
 export default {
-  components: { ProjectCheckbox, FormItem, SelectBox, CorrectMessage },
+  components: { ProjectCheckbox, FormItem, SelectBox },
   data() {
     return {
       scopeType: [
@@ -57,8 +49,7 @@ export default {
         { text: '20:00', value: 20 },
         { text: '21:00', value: 21 },
         { text: '22:00', value: 22 }
-      ],
-      completed: false
+      ]
     }
   },
   computed: {
@@ -68,6 +59,10 @@ export default {
       },
       set(value) {
         this.$store.commit(types.UPDATE_REMIND_SCOPE_TYPE, value);
+
+        if (value === 'myself') {
+          this.hasError = false;
+        }
       }
     },
     remindTimingDate: {
@@ -85,17 +80,14 @@ export default {
       set(value) {
         this.$store.commit(types.UPDATE_REMIND_TIMING_HOUR, value);
       }
-    }
-  },
-  methods: {
-    submitSetting() {
-      const submit = [
-        this.$store.dispatch(types.SET_REMIND_SCOPE, this.$store.state.remindScope),
-        this.$store.dispatch(types.SET_REMIND_TIMING, this.$store.state.remindTiming)
-      ];
-      Promise.all(submit).then(() => {
-        this.completed = true;
-      });
+    },
+    hasError: {
+      get() {
+        return this.$store.state.hasError;
+      },
+      set(value) {
+        this.$store.commit(types.UPDATE_HAS_ERROR, value);
+      }
     }
   }
 };
