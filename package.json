@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "webpack:watch": "webpack --watch -d",
+    "release": "webpack",
     "start": "npm run webpack:watch"
   },
   "devDependencies": {
