@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Backlog Notification",
-  "description": "バックログのお知らせ通知が来た場合に、デスクトップに通知します。",
+  "description": "バックログのデスクトップ通知を有効にする拡張機能です。お知らせ通知とリマインダーの2種類のデスクトップ通知があります。",
   "version": "1.5",
   "browser_action": {
     "default_icon": "app/icon.png"
