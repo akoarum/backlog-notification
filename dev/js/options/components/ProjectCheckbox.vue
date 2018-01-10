@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="c-form-selectProjects">
     <ul class="c-form-checkbox">
       <li class="c-form-checkbox__item" v-for="item in this.$store.state.projects" :key="item.id">
         <label>
